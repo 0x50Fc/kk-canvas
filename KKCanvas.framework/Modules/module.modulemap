@@ -1,0 +1,6 @@
+framework module KKCanvas {
+  umbrella header "KKCanvas.h"
+
+  export *
+  module * { export * }
+}
