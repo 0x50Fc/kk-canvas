@@ -24,7 +24,10 @@
 /* Begin PBXBuildFile section */
 		1A4490872126DAF800C9A50A /* KKCanvas.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A4490852126DAF800C9A50A /* KKCanvas.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A4490D72126DC6600C9A50A /* kk-config.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A4490D62126DC6600C9A50A /* kk-config.h */; };
-		1A4490D92126DC8C00C9A50A /* CGContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A4490D82126DC8C00C9A50A /* CGContext.cpp */; };
+		1A4490D92126DC8C00C9A50A /* CGContext.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1A4490D82126DC8C00C9A50A /* CGContext.cc */; };
+		1A4490DC2126E00F00C9A50A /* WebGLContextt.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A4490DB2126E00F00C9A50A /* WebGLContextt.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A4490DD2126E01300C9A50A /* CGContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A4490D52126DC2500C9A50A /* CGContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A4490DF2126E04800C9A50A /* WebGLContext.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1A4490DE2126E04800C9A50A /* WebGLContext.cc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,6 +122,20 @@
 			remoteGlobalIDString = 1ACF730B1FF0DC3B003FB42A;
 			remoteInfo = KKView;
 		};
+		1A4490F52126E0C100C9A50A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A4490962126DB7100C9A50A /* KKObject.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1A9157EE21196F7B0055256A;
+			remoteInfo = KKObject;
+		};
+		1A4490F72126E0C100C9A50A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A4490962126DB7100C9A50A /* KKObject.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1A7CBC4D211ADC8D006DC0A3;
+			remoteInfo = KKObjectStaticLibrary;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -132,7 +149,9 @@
 		1A4490CA2126DBCD00C9A50A /* KKView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KKView.xcodeproj; path = ../../KKView/KKView/KKView.xcodeproj; sourceTree = "<group>"; };
 		1A4490D52126DC2500C9A50A /* CGContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGContext.h; sourceTree = "<group>"; };
 		1A4490D62126DC6600C9A50A /* kk-config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "kk-config.h"; path = "../../kk-object/include/kk-config.h"; sourceTree = SOURCE_ROOT; };
-		1A4490D82126DC8C00C9A50A /* CGContext.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CGContext.cpp; sourceTree = "<group>"; };
+		1A4490D82126DC8C00C9A50A /* CGContext.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CGContext.cc; sourceTree = "<group>"; };
+		1A4490DB2126E00F00C9A50A /* WebGLContextt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebGLContextt.h; sourceTree = "<group>"; };
+		1A4490DE2126E04800C9A50A /* WebGLContext.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WebGLContext.cc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +202,7 @@
 			children = (
 				1A4490D62126DC6600C9A50A /* kk-config.h */,
 				1A4490D52126DC2500C9A50A /* CGContext.h */,
+				1A4490DB2126E00F00C9A50A /* WebGLContextt.h */,
 			);
 			name = include;
 			path = ../../include;
@@ -191,7 +211,8 @@
 		1A4490952126DB5E00C9A50A /* src */ = {
 			isa = PBXGroup;
 			children = (
-				1A4490D82126DC8C00C9A50A /* CGContext.cpp */,
+				1A4490D82126DC8C00C9A50A /* CGContext.cc */,
+				1A4490DE2126E04800C9A50A /* WebGLContext.cc */,
 			);
 			name = src;
 			path = ../../src;
@@ -231,6 +252,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1A4490EB2126E0C100C9A50A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A4490F62126E0C100C9A50A /* KKObject.framework */,
+				1A4490F82126E0C100C9A50A /* libKKObject.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -238,7 +268,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A4490DD2126E01300C9A50A /* CGContext.h in Headers */,
 				1A4490D72126DC6600C9A50A /* kk-config.h in Headers */,
+				1A4490DC2126E00F00C9A50A /* WebGLContextt.h in Headers */,
 				1A4490872126DAF800C9A50A /* KKCanvas.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -311,6 +343,10 @@
 					ProjectRef = 1A4490B92126DB9200C9A50A /* KKEvent.xcodeproj */;
 				},
 				{
+					ProductGroup = 1A4490EB2126E0C100C9A50A /* Products */;
+					ProjectRef = 1A4490962126DB7100C9A50A /* KKObject.xcodeproj */;
+				},
+				{
 					ProductGroup = 1A4490CB2126DBCD00C9A50A /* Products */;
 					ProjectRef = 1A4490CA2126DBCD00C9A50A /* KKView.xcodeproj */;
 				},
@@ -366,6 +402,20 @@
 			remoteRef = 1A4490D12126DBCE00C9A50A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		1A4490F62126E0C100C9A50A /* KKObject.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = KKObject.framework;
+			remoteRef = 1A4490F52126E0C100C9A50A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1A4490F82126E0C100C9A50A /* libKKObject.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libKKObject.a;
+			remoteRef = 1A4490F72126E0C100C9A50A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -399,7 +449,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A4490D92126DC8C00C9A50A /* CGContext.cpp in Sources */,
+				1A4490D92126DC8C00C9A50A /* CGContext.cc in Sources */,
+				1A4490DF2126E04800C9A50A /* WebGLContext.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
