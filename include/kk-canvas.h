@@ -57,7 +57,7 @@ namespace kk {
         virtual void * userdata();
         virtual void setUserdata(void *userdata);
         
-        virtual kk::Strong popCGContext();
+        virtual kk::Strong CGContext();
         
     protected:
         kk::String _basePath;

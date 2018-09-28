@@ -11,6 +11,7 @@
 #include "kk-canvas.h"
 #include "require_js.h"
 #include "CGContext.h"
+#include "WebGLContext.h"
 
 #define Kernel 1.0
 
@@ -251,7 +252,7 @@ namespace kk {
         duk_pop_2(ctx);
         
         if(object && func) {
-            kk::Strong v = object->popCGContext();
+            kk::Strong v = object->CGContext();
             if(v.get() != nullptr) {
                 (*func)(object,v.get());
             }
@@ -528,9 +529,11 @@ namespace kk {
         }
     }
     
-    kk::Strong Canvas::popCGContext() {
+    kk::Strong Canvas::CGContext() {
         kk::Strong v = _CGContext.get();
-        _CGContext = (kk::Object *) nullptr;
+        if(_CGContext.as<kk::CG::Context>() != nullptr){
+            _CGContext = (kk::Object *) nullptr;
+        }
         return v;
     }
     
@@ -591,6 +594,18 @@ namespace kk {
             
             if(v == nullptr && _width > 0 && _height > 0) {
                 v = new kk::CG::OSContext(_width,_height);
+                _CGContext = v;
+            }
+            
+            kk::script::PushObject(ctx, v);
+            
+            return 1;
+        } else if(name == "webgl") {
+            
+            kk::WebGL::Context * v = _CGContext.as<kk::WebGL::Context>();
+            
+            if(v == nullptr) {
+                v = new kk::WebGL::Context(_width,_height);
                 _CGContext = v;
             }
             
