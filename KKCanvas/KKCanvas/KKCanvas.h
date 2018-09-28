@@ -7,13 +7,5 @@
 //
 
 #import <UIKit/UIKit.h>
-
-//! Project version number for KKCanvas.
-FOUNDATION_EXPORT double KKCanvasVersionNumber;
-
-//! Project version string for KKCanvas.
-FOUNDATION_EXPORT const unsigned char KKCanvasVersionString[];
-
-// In this header, you should import all the public headers of your framework using statements like #import <KKCanvas/PublicHeader.h>
-
+#import <KKCanvas/KKCanvasElement.h>
 
