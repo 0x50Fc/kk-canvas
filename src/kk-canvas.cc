@@ -104,6 +104,84 @@ namespace kk {
         return 0;
     }
     
+    static duk_ret_t Canvas_getContent(duk_context * ctx) {
+        
+        kk::CString basePath = nullptr;
+        
+        duk_get_global_string(ctx, "__basePath");
+        
+        if(duk_is_string(ctx, -1)) {
+            basePath = duk_to_string(ctx, -1);
+        }
+        
+        duk_pop(ctx);
+        
+        if(basePath) {
+            
+            int top = duk_get_top(ctx);
+            
+            kk::CString path = nullptr;
+            
+            if(top >0 && duk_is_string(ctx, -top)) {
+                path = duk_to_string(ctx, -top);
+            }
+            
+            if(path) {
+                
+                kk::String p;
+                
+                if(basePath) {
+                    
+                    p.append(basePath);
+                    
+                    if(!kk::CStringHasSuffix(basePath, "/")) {
+                        p.append("/");
+                    }
+                    
+                }
+                
+                p.append(path);
+                
+                FILE * fd = fopen(p.c_str(), "r");
+                
+                if(fd) {
+                    
+                    evbuffer * buf = evbuffer_new();
+                    
+                    char data[20480];
+                    size_t n;
+                    
+                    while((n = fread(data, 1, sizeof(data), fd)) > 0) {
+                        evbuffer_add(buf, data, n);
+                    }
+                    
+                    fclose(fd);
+                    
+                    
+                    n = EVBUFFER_LENGTH(buf);
+                    void * v = duk_push_fixed_buffer(ctx, n);
+                    
+                    evbuffer_remove(buf, v, n);
+                    
+                    evbuffer_free(buf);
+                    
+                    duk_push_buffer_object(ctx, -1, 0, n, DUK_BUFOBJ_UINT8ARRAY);
+                    
+                    duk_remove(ctx, -2);
+                    
+                    return 1;
+                    
+                } else{
+                    kk::Log("Not Open %s",p.c_str());
+                }
+                
+            }
+            
+        }
+        
+        return 0;
+    }
+    
     static duk_ret_t Canvas_compile(duk_context * ctx) {
         
         kk::CString basePath = nullptr;
@@ -198,21 +276,25 @@ namespace kk {
             
             duk_push_string(ctx, "platform");
             duk_push_string(ctx, "kk");
-            duk_put_prop(ctx, -3);
+            duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_WRITABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE | DUK_DEFPROP_SET_ENUMERABLE);
             
             duk_push_string(ctx, "kernel");
             duk_push_number(ctx, Kernel);
-            duk_put_prop(ctx, -3);
+            duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_WRITABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE | DUK_DEFPROP_SET_ENUMERABLE);
             
             duk_push_string(ctx, "getString");
             duk_push_c_function(ctx, Canvas_getString, 1);
-            duk_put_prop(ctx, -3);
+            duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_WRITABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE | DUK_DEFPROP_SET_ENUMERABLE);
+            
+            duk_push_string(ctx, "getContent");
+            duk_push_c_function(ctx, Canvas_getContent, 1);
+            duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_WRITABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE | DUK_DEFPROP_SET_ENUMERABLE);
             
             duk_push_string(ctx, "compile");
             duk_push_c_function(ctx, Canvas_compile, 3);
-            duk_put_prop(ctx, -3);
+            duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_WRITABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE | DUK_DEFPROP_SET_ENUMERABLE);
             
-            duk_put_prop(ctx, -3);
+            duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_WRITABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE | DUK_DEFPROP_SET_ENUMERABLE);
             
             
             duk_pop(ctx);
@@ -223,43 +305,20 @@ namespace kk {
             kk::Crypto_openlibs(ctx);
         }
         
+        {
+            
+            kk::script::SetPrototype(ctx, &kk::WebSocket::ScriptClass);
+            kk::script::SetPrototype(ctx, &kk::Http::ScriptClass);
+            
+            kk::Strong v = new kk::Http(queue->base(),dns);
+            
+            kk::script::PushObject(ctx, v.get());
+            duk_put_global_string(ctx, "http");
+            
+        }
+        
     }
     
-    static duk_ret_t Canvas_draw_func(duk_context * ctx) {
-        
-        Canvas * object = nullptr;
-        
-        CanvasDrawFunc func = nullptr;
-        
-        duk_push_current_function(ctx);
-        
-        duk_get_prop_string(ctx, -1, "__func");
-        
-        if(duk_is_pointer(ctx, -1)) {
-            func = (CanvasDrawFunc) duk_to_pointer(ctx, -1);
-        }
-        
-        duk_pop_2(ctx);
-        
-        duk_push_this(ctx);
-        
-        duk_get_prop_string(ctx, -1, "__object");
-        
-        if(duk_is_pointer(ctx, -1)) {
-            object = (Canvas *) duk_to_pointer(ctx, -1);
-        }
-        
-        duk_pop_2(ctx);
-        
-        if(object && func) {
-            kk::Strong v = object->CGContext();
-            if(v.get() != nullptr) {
-                (*func)(object,v.get());
-            }
-        }
-        
-        return 0;
-    }
     
     static duk_ret_t Canvas_emit_func(duk_context * ctx) {
         
@@ -295,10 +354,14 @@ namespace kk {
     }
     
     Canvas::Canvas(kk::DispatchQueue * queue,
-           evdns_base * dns,
-           kk::CString basePath,
-           const CanvasCallback * cb,void * userdata):
-        _queue(queue),_basePath(basePath),_userdata(userdata){
+                   evdns_base * dns,
+                   kk::CString basePath,
+                   const CanvasCallback * cb,void * userdata,
+                   Uint width,
+                   Uint height):
+    _queue(queue),_basePath(basePath),_userdata(userdata),
+    _draw(cb->draw),_getContext(cb->getContext),
+    _width(width),_height(height){
         
         _jsContext = new kk::script::Context();
         
@@ -316,13 +379,6 @@ namespace kk {
             
             duk_push_string(ctx, "__object");
             duk_push_pointer(ctx, this);
-            duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_ENUMERABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE|DUK_DEFPROP_CLEAR_WRITABLE);
-            
-            duk_push_string(ctx, "draw");
-            duk_push_c_function(ctx, Canvas_draw_func, 0);
-                duk_push_string(ctx, "__func");
-                duk_push_pointer(ctx, (void *) cb->draw);
-                duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_ENUMERABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE|DUK_DEFPROP_CLEAR_WRITABLE);
             duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_ENUMERABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE|DUK_DEFPROP_CLEAR_WRITABLE);
             
             duk_push_string(ctx, "emit");
@@ -543,7 +599,7 @@ namespace kk {
     }
     
     duk_ret_t Canvas::duk_height(duk_context *ctx) {
-        duk_push_uint(ctx, _width);
+        duk_push_uint(ctx, _height);
         return 1;
     }
     
@@ -573,6 +629,30 @@ namespace kk {
         return 0;
     }
     
+    static void Canvas_drawDispatchFunc(DispatchQueue * queue,BK_DEF_ARG) {
+        
+        BK_GET_STRONG(canvas)
+        BK_GET_VAR(draw,CanvasDrawFunc)
+        
+        Canvas * v = canvas.as<Canvas>();
+        
+        if(v && draw) {
+            kk::Strong vv = v->CGContext();
+            if(vv.get() != nullptr) {
+                (*draw)(v,vv.get());
+            }
+        }
+        
+    }
+    
+    Uint Canvas::width() {
+        return _width;
+    }
+    
+    Uint Canvas::height() {
+        return _height;
+    }
+    
     duk_ret_t Canvas::duk_getContext(duk_context *ctx) {
         
         kk::String name;
@@ -581,6 +661,16 @@ namespace kk {
         
         if(top > 0) {
             name = kk::script::toString(ctx, -top);
+        }
+        
+        {
+            BK_CTX
+            
+            BK_WEAK(canvas, this)
+            BK_PTR(draw, _draw, NULL)
+            
+            _queue.as<kk::DispatchQueue>()->async(Canvas_drawDispatchFunc, BK_ARG);
+            
         }
         
         if(name == "2d") {
@@ -597,6 +687,10 @@ namespace kk {
                 _CGContext = v;
             }
             
+            if(_getContext) {
+                (*_getContext)(this,v);
+            }
+            
             kk::script::PushObject(ctx, v);
             
             return 1;
@@ -607,6 +701,10 @@ namespace kk {
             if(v == nullptr) {
                 v = new kk::WebGL::Context(_width,_height);
                 _CGContext = v;
+            }
+            
+            if(_getContext) {
+                (*_getContext)(this,v);
             }
             
             kk::script::PushObject(ctx, v);

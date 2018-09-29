@@ -39,10 +39,16 @@ namespace kk {
         }
         
         void Context::setSize(Uint width,Uint height) {
-            if(_width != width || _height != height) {
-                _width = width;
-                _height = height;
-            }
+            _width = width;
+            _height = height;
+        }
+        
+        Uint Context::width() {
+            return _width;
+        }
+        
+        Uint Context::height() {
+            return _height;
         }
         
     }

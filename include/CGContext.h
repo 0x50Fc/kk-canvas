@@ -53,21 +53,16 @@ namespace kk {
             std::map<kk::String,Color> _values;
         };
         
-        class Image : public kk::Object, public kk::script::IObject {
+        class Image {
         public:
             virtual Uint width() = 0;
             virtual Uint height() = 0;
-            
-            DEF_SCRIPT_CLASS_NOALLOC
-            
-            DEF_SCRIPT_PROPERTY_READONLY(width)
-            DEF_SCRIPT_PROPERTY_READONLY(height)
-            
+            virtual void copyPixels(void * data) = 0;
+            virtual Boolean isCopyPixels() = 0;
 #if defined(KK_PLATFORM_IOS)
         public:
             virtual CGImageRef CGImage() = 0;
 #endif
-            
         };
         
         class Style : public kk::Object {
@@ -220,7 +215,7 @@ namespace kk {
         TextBaseline TextBaselineFromString(kk::CString string);
         kk::String StringFromTextBaseline(TextBaseline v);
         
-        class ImageData : public Image {
+        class ImageData : public kk::Object , public kk::script::IObject, public Image {
         public:
             ImageData(Uint width,Uint height);
             virtual ~ImageData();
@@ -228,9 +223,13 @@ namespace kk {
             virtual Uint height();
             virtual Ubyte * data();
             virtual Uint size();
+            virtual Boolean isCopyPixels();
+            virtual void copyPixels(void * data);
             
             DEF_SCRIPT_CLASS_NOALLOC
             
+            DEF_SCRIPT_PROPERTY_READONLY(width)
+            DEF_SCRIPT_PROPERTY_READONLY(height)
             DEF_SCRIPT_PROPERTY_READONLY(data)
             
 #if defined(KK_PLATFORM_IOS)
@@ -536,7 +535,39 @@ namespace kk {
             CGContextRef _ctx;
 #endif
         };
+        
+        class OSImage : public kk::script::HeapObject, public Image {
+        public:
+            OSImage(kk::CString src,kk::CString basePath);
+            virtual ~OSImage();
+            virtual Uint width();
+            virtual Uint height();
+            virtual Boolean isCopyPixels();
+            virtual void copyPixels(void * data);
+            
+            DEF_SCRIPT_CLASS_NOALLOC
+            
+            DEF_SCRIPT_PROPERTY_READONLY(width)
+            DEF_SCRIPT_PROPERTY_READONLY(height)
+            DEF_SCRIPT_PROPERTY_READONLY(src)
+            
+            virtual kk::CString src();
+            virtual kk::CString basePath();
+            virtual void done(kk::CString errmsg);
+            
+            static void load(OSImage * image);
+        protected:
+            kk::String _src;
+            kk::String _basePath;
+#if defined(KK_PLATFORM_IOS)
+        public:
+            virtual CGImageRef CGImage();
+            virtual void setCGImage(CGImageRef image);
+        protected:
+            CGImageRef _image;
+#endif
 
+        };
         
     }
     

@@ -256,8 +256,14 @@ namespace kk {
             DEF_SCRIPT_METHOD(vertexAttribPointer)
             
             DEF_SCRIPT_METHOD(viewport)
+            
+            DEF_SCRIPT_METHOD(getSupportedExtensions)
+            DEF_SCRIPT_METHOD(getExtension)
 
             virtual void setSize(Uint width,Uint height);
+            
+            virtual Uint width();
+            virtual Uint height();
             
         protected:
             Uint _width;

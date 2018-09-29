@@ -673,7 +673,7 @@ namespace kk {
             return new ImageData(width,height);
         }
         
-        Pattern::Pattern(Image * image,PatternType type):_image(image),_type(type) {
+        Pattern::Pattern(Image * image,PatternType type):_image((kk::Object *) image),_type(type) {
             
         }
         
@@ -706,6 +706,14 @@ namespace kk {
             
         }
 
+        void ImageData::copyPixels(void * data) {
+            memcpy(data, _data, _width * _height * 4);
+        }
+        
+        Boolean ImageData::isCopyPixels() {
+            return true;
+        }
+        
         Uint ImageData::width() {
             return _width;
         }
@@ -720,6 +728,18 @@ namespace kk {
         
         Uint ImageData::size() {
             return _width * _height * 4;
+        }
+
+        OSImage::OSImage(kk::CString src,kk::CString basePath):_src(src),_basePath(basePath) {
+            
+        }
+        
+        kk::CString OSImage::src() {
+            return _src.c_str();
+        }
+        
+        kk::CString OSImage::basePath() {
+            return _basePath.c_str();
         }
         
     }

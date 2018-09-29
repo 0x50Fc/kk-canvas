@@ -25,11 +25,13 @@ namespace kk {
     class Canvas;
     
     typedef void (*CanvasDrawFunc)(Canvas * canvas,kk::Object * CGContext);
+    typedef void (*CanvasGetContextFunc)(Canvas * canvas,kk::Object * CGContext);
     typedef void (*CanvasEmitFunc)(Canvas * canvas);
     
     struct CanvasCallback {
         CanvasDrawFunc draw;
         CanvasEmitFunc emit;
+        CanvasGetContextFunc getContext;
     };
     
     class Canvas : public kk::Object, public kk::script::IObject {
@@ -38,7 +40,10 @@ namespace kk {
         Canvas(kk::DispatchQueue * queue,
                evdns_base * dns,
                kk::CString basePath,
-               const CanvasCallback * cb,void * userdata);
+               const CanvasCallback * cb,
+               void * userdata,
+               Uint width,
+               Uint height);
         
         DEF_SCRIPT_CLASS_NOALLOC
         
@@ -59,12 +64,17 @@ namespace kk {
         
         virtual kk::Strong CGContext();
         
+        virtual Uint width();
+        virtual Uint height();
+        
     protected:
         kk::String _basePath;
         kk::Strong _queue;
         kk::Strong _jsContext;
         kk::Strong _CGContext;
         void * _userdata;
+        CanvasDrawFunc _draw;
+        CanvasGetContextFunc _getContext;
         Uint _width;
         Uint _height;
     };

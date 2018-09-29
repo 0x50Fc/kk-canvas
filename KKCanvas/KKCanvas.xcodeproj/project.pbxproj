@@ -33,6 +33,9 @@
 		1A484D7D215CD03800B63916 /* KKCanvasElement.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A484D7B215CD03800B63916 /* KKCanvasElement.mm */; };
 		1A7A462E215DC372000A6145 /* kk-canvas.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1A7A462D215DC372000A6145 /* kk-canvas.cc */; };
 		1A7A4637215E2A0E000A6145 /* WebGLContextJS.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1A7A4636215E2A0E000A6145 /* WebGLContextJS.cc */; };
+		1A7A4639215F2702000A6145 /* CGImage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A7A4638215F2702000A6145 /* CGImage.mm */; };
+		1A7A4655215F4E6E000A6145 /* KKCanvasGLContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7A4653215F4E6D000A6145 /* KKCanvasGLContext.h */; };
+		1A7A4656215F4E6E000A6145 /* KKCanvasGLContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7A4654215F4E6E000A6145 /* KKCanvasGLContext.m */; };
 		1AFC6150215C731700393544 /* CGContextJS.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC614F215C731700393544 /* CGContextJS.cc */; };
 /* End PBXBuildFile section */
 
@@ -166,6 +169,9 @@
 		1A7A4630215DC765000A6145 /* require_js.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = require_js.h; sourceTree = "<group>"; };
 		1A7A4631215DC765000A6145 /* require.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = require.js; sourceTree = "<group>"; };
 		1A7A4636215E2A0E000A6145 /* WebGLContextJS.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WebGLContextJS.cc; sourceTree = "<group>"; };
+		1A7A4638215F2702000A6145 /* CGImage.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CGImage.mm; sourceTree = "<group>"; };
+		1A7A4653215F4E6D000A6145 /* KKCanvasGLContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKCanvasGLContext.h; sourceTree = "<group>"; };
+		1A7A4654215F4E6E000A6145 /* KKCanvasGLContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKCanvasGLContext.m; sourceTree = "<group>"; };
 		1AFC614F215C731700393544 /* CGContextJS.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CGContextJS.cc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -210,8 +216,11 @@
 				1A4490852126DAF800C9A50A /* KKCanvas.h */,
 				1A4490862126DAF800C9A50A /* Info.plist */,
 				1A484D77215CB30F00B63916 /* CGContext.mm */,
+				1A7A4638215F2702000A6145 /* CGImage.mm */,
 				1A484D7A215CD03800B63916 /* KKCanvasElement.h */,
 				1A484D7B215CD03800B63916 /* KKCanvasElement.mm */,
+				1A7A4653215F4E6D000A6145 /* KKCanvasGLContext.h */,
+				1A7A4654215F4E6E000A6145 /* KKCanvasGLContext.m */,
 			);
 			path = KKCanvas;
 			sourceTree = "<group>";
@@ -304,6 +313,7 @@
 				1A484D7C215CD03800B63916 /* KKCanvasElement.h in Headers */,
 				1A4490DD2126E01300C9A50A /* CGContext.h in Headers */,
 				1A4490D72126DC6600C9A50A /* kk-config.h in Headers */,
+				1A7A4655215F4E6E000A6145 /* KKCanvasGLContext.h in Headers */,
 				1A4490DC2126E00F00C9A50A /* WebGLContext.h in Headers */,
 				1A4490872126DAF800C9A50A /* KKCanvas.h in Headers */,
 			);
@@ -484,7 +494,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A484D7D215CD03800B63916 /* KKCanvasElement.mm in Sources */,
+				1A7A4639215F2702000A6145 /* CGImage.mm in Sources */,
 				1A7A4637215E2A0E000A6145 /* WebGLContextJS.cc in Sources */,
+				1A7A4656215F4E6E000A6145 /* KKCanvasGLContext.m in Sources */,
 				1A7A462E215DC372000A6145 /* kk-canvas.cc in Sources */,
 				1AFC6150215C731700393544 /* CGContextJS.cc in Sources */,
 				1A4490D92126DC8C00C9A50A /* CGContext.cc in Sources */,

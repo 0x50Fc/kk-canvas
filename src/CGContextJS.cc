@@ -12,29 +12,7 @@
 
 namespace kk {
     
-    
     namespace CG {
-        
-        IMP_SCRIPT_CLASS_BEGIN_NOALLOC(nullptr, Image, CGImage)
-        
-        static kk::script::Property propertys[] = {
-            IMP_SCRIPT_PROPERTY_READONLY(Image,width)
-            IMP_SCRIPT_PROPERTY_READONLY(Image,height)
-        };
-        
-        kk::script::SetProperty(ctx, -1, propertys, sizeof(propertys) / sizeof(kk::script::Property));
-        
-        IMP_SCRIPT_CLASS_END
-        
-        duk_ret_t Image::duk_width(duk_context *ctx) {
-            duk_push_uint(ctx, width());
-            return 1;
-        }
-        
-        duk_ret_t Image::duk_height(duk_context *ctx) {
-            duk_push_uint(ctx, height());
-            return 1;
-        }
         
         IMP_SCRIPT_CLASS_BEGIN_NOALLOC(nullptr, Context, CGContext)
         
@@ -941,9 +919,11 @@ namespace kk {
         
         IMP_SCRIPT_CLASS_END
         
-        IMP_SCRIPT_CLASS_BEGIN_NOALLOC(&Image::ScriptClass, ImageData, CGImageData)
+        IMP_SCRIPT_CLASS_BEGIN_NOALLOC(nullptr, ImageData, CGImageData)
 
         static kk::script::Property propertys[] = {
+            IMP_SCRIPT_PROPERTY_READONLY(ImageData,width)
+            IMP_SCRIPT_PROPERTY_READONLY(ImageData,height)
             IMP_SCRIPT_PROPERTY_READONLY(ImageData,data)
         };
         
@@ -952,6 +932,15 @@ namespace kk {
         
         IMP_SCRIPT_CLASS_END
         
+        duk_ret_t ImageData::duk_width(duk_context * ctx) {
+            duk_push_uint(ctx, _width);
+            return 1;
+        }
+        
+        duk_ret_t ImageData::duk_height(duk_context * ctx) {
+            duk_push_uint(ctx, _width);
+            return 1;
+        }
         
         duk_ret_t ImageData::duk_data(duk_context *ctx) {
             size_t size = _width * _height * 4;
@@ -960,6 +949,110 @@ namespace kk {
             duk_push_buffer_object(ctx, -1, 0, size, DUK_BUFOBJ_UINT8ARRAY);
             duk_remove(ctx, -2);
             return 1;
+        }
+        
+        
+        static duk_ret_t OSImageAllocFunc(duk_context * ctx) {
+        
+            int top = duk_get_top(ctx);
+            
+            if(top > 0 && duk_is_string(ctx, -top)) {
+                
+                kk::CString src = duk_to_string(ctx, -top);
+                kk::CString basePath = nullptr;
+                
+                duk_get_global_string(ctx, "__basePath");
+                
+                if(duk_is_string(ctx, -1)) {
+                    basePath = duk_to_string(ctx, -1);
+                }
+                
+                duk_pop(ctx);
+                
+                OSImage * image = new OSImage(src,basePath);
+                
+                kk::script::PushObject(ctx, image);
+                
+                OSImage::load(image);
+                
+                return 1;
+            }
+            
+            return 0;
+        }
+        
+        IMP_SCRIPT_CLASS_BEGIN_NOALLOC(nullptr, OSImage, CGOSImage)
+        
+        duk_push_string(ctx, "alloc");
+        duk_push_c_function(ctx, OSImageAllocFunc, 1);
+        duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_WRITABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE);
+        
+        IMP_SCRIPT_CLASS_END
+        
+        duk_ret_t OSImage::duk_width(duk_context * ctx) {
+            duk_push_uint(ctx, width());
+            return 1;
+        }
+        
+        duk_ret_t OSImage::duk_height(duk_context * ctx) {
+            duk_push_uint(ctx, height());
+            return 1;
+        }
+        
+        duk_ret_t OSImage::duk_src(duk_context * ctx) {
+            duk_push_string(ctx, _src.c_str());
+            return 1;
+        }
+        
+        void OSImage::done(kk::CString errmsg) {
+            
+            std::map<duk_context *,void *>::iterator i = _heapptrs.begin();
+            
+            while(i != _heapptrs.end()) {
+                
+                duk_context * ctx = i->first;
+                void * heapptr = i->second;
+                
+                duk_push_heapptr(ctx, heapptr);
+                
+                if(duk_is_object(ctx, -1)) {
+                    
+                    if(errmsg == nullptr) {
+                        
+                        duk_get_prop_string(ctx, -1, "onerror");
+                        
+                        if(duk_is_function(ctx, -1)) {
+                            
+                            duk_push_string(ctx, errmsg);
+                            
+                            if(duk_pcall(ctx, 1) != DUK_EXEC_SUCCESS) {
+                                kk::script::Error(ctx, -1);
+                            }
+                            
+                        }
+                        
+                    } else {
+                        
+                        duk_get_prop_string(ctx, -1, "onload");
+                        
+                        if(duk_is_function(ctx, -1)) {
+                            
+                            if(duk_pcall(ctx, 0) != DUK_EXEC_SUCCESS) {
+                                kk::script::Error(ctx, -1);
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+                duk_pop_2(ctx);
+                
+                i ++;
+            }
+            
+
         }
     }
     
