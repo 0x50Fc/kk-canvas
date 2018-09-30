@@ -312,10 +312,14 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
     
     if(_GLContext != nil) {
         
- 
+        /*
         glDisable(GL_DEPTH_TEST);
+//        glDisable(GL_STENCIL_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE , GL_ONE_MINUS_SRC_ALPHA);
+        
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
         
         GLfloat vs[] = {-0.5, 0.5, -0.5, -0.5, 0.0, -0.5};
         
@@ -394,10 +398,9 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
         glDeleteShader(vsh);
         
         glDeleteProgram(program);
+        */
         
         [_GLContext display];
-        
-        [EAGLContext setCurrentContext:nil];
         
     }
     

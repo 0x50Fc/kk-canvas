@@ -17,7 +17,8 @@ namespace kk {
     
     
     namespace WebGL {
-        
+      
+#undef DEBUG
 #ifdef DEBUG
 #define KK_GL_ERROR(ctx) for(GLenum v = glGetError(); v !=0; v = 0) { kk::Log("[WebGL] [ERROR] %s(%d) %s: %x",__FILE__,__LINE__,__FUNCTION__,v); duk_push_context_dump(ctx); return duk_push_error_object(ctx,DUK_ERR_ERROR,"[WebGL] [ERROR] %x",v); } kk::Log("[WebGL] %s",__FUNCTION__);
 #else
@@ -803,15 +804,17 @@ namespace kk {
         }
         
         duk_ret_t Context::duk_clear(duk_context * ctx) {
-            //glClear(kk::script::toUintArgument(ctx, 0,0 )); KK_GL_ERROR(ctx)
+            GLbitfield v = kk::script::toUintArgument(ctx, 0,0 );
+            glClear(v & (GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_COLOR_BUFFER_BIT)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_clearColor(duk_context * ctx) {
-            glClearColor(kk::script::toDoubleArgument(ctx, 0,0 ),
-                         kk::script::toDoubleArgument(ctx, 1,0 ),
-                         kk::script::toDoubleArgument(ctx, 2,0 ),
-                         kk::script::toDoubleArgument(ctx, 3,0 )); KK_GL_ERROR(ctx)
+            GLfloat red     = kk::script::toDoubleArgument(ctx, 0,0 );
+            GLfloat green   = kk::script::toDoubleArgument(ctx, 1,0 );
+            GLfloat blue    = kk::script::toDoubleArgument(ctx, 2,0 );
+            GLfloat alpha   = kk::script::toDoubleArgument(ctx, 3,0 );
+            glClearColor(red,green,blue,alpha); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -826,10 +829,11 @@ namespace kk {
         }
         
         duk_ret_t Context::duk_colorMask(duk_context * ctx) {
-            glColorMask(kk::script::toBooleanArgument(ctx, 0,false),
-                        kk::script::toBooleanArgument(ctx, 1,false),
-                        kk::script::toBooleanArgument(ctx, 2,false),
-                        kk::script::toBooleanArgument(ctx, 3,false)); KK_GL_ERROR(ctx)
+            GLboolean red     = kk::script::toBooleanArgument(ctx, 0,0 );
+            GLboolean green   = kk::script::toBooleanArgument(ctx, 1,0 );
+            GLboolean blue    = kk::script::toBooleanArgument(ctx, 2,0 );
+            GLboolean alpha   = kk::script::toBooleanArgument(ctx, 3,0 );
+            glColorMask(red,green,blue,alpha); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -1069,7 +1073,8 @@ namespace kk {
         }
         
         duk_ret_t Context::duk_enable(duk_context * ctx) {
-            glEnable(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
+            GLenum cap = kk::script::toUintArgument(ctx, 0, 0);
+            glEnable(cap); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -1183,6 +1188,7 @@ namespace kk {
         duk_ret_t Context::duk_getActiveUniform(duk_context * ctx) {
             
             Program * v = dynamic_cast<Program *>( kk::script::toObjectArgument(ctx, 0) );
+            GLuint index = kk::script::toUintArgument(ctx, 1, 0);
             
             if(v) {
                 
@@ -1192,8 +1198,8 @@ namespace kk {
                 GLchar name[256] = "";
                 
                 glGetActiveUniform(v->value(),
-                                  kk::script::toUintArgument(ctx, 1, 0),
-                                  sizeof(name) - 1,
+                                  index,
+                                  sizeof(name),
                                   &length,
                                   &size,
                                   &type,
@@ -2072,10 +2078,12 @@ namespace kk {
         }
         
         duk_ret_t Context::duk_viewport(duk_context * ctx) {
-            glViewport(kk::script::toIntArgument(ctx, 0, 0),
-                       kk::script::toIntArgument(ctx, 1, 0),
-                       kk::script::toUintArgument(ctx, 2, 0),
-                       kk::script::toUintArgument(ctx, 3, 0)); KK_GL_ERROR(ctx)
+            GLint x         = kk::script::toIntArgument(ctx, 0, 0);
+            GLint y         = kk::script::toIntArgument(ctx, 1, 0);
+            GLsizei width   = kk::script::toUintArgument(ctx, 2, 0);
+            GLsizei height  = kk::script::toUintArgument(ctx, 3, 0);
+            
+            glViewport(x,y,width,height); KK_GL_ERROR(ctx)
             return 0;
         }
         
