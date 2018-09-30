@@ -492,8 +492,7 @@ namespace kk {
         
         if(ctx) {
             
-            duk_push_string(ctx, filename);
-            duk_compile_string_filename(ctx, 0, code);
+            kk::script::compile(ctx,code,filename);
             
             if(duk_is_function(ctx, -1)) {
                 

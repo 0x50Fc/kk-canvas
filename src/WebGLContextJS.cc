@@ -10,19 +10,20 @@
 #include "WebGLContext.h"
 #include "CGContext.h"
 
+#define GL_DEPTH_STENCIL 0x84F9
+#define GL_DEPTH_STENCIL_ATTACHMENT 0x821A
 
 namespace kk {
     
     
     namespace WebGL {
         
-        static GLenum __GL_ERROR = 0;
-        
 #ifdef DEBUG
-#define KK_GL_ERROR if((__GL_ERROR = glGetError()) !=0) { kk::Log("[WebGL] [ERROR] %s(%d): %x",__FILE__,__LINE__,__GL_ERROR); assert(0); }
+#define KK_GL_ERROR(ctx) for(GLenum v = glGetError(); v !=0; v = 0) { kk::Log("[WebGL] [ERROR] %s(%d) %s: %x",__FILE__,__LINE__,__FUNCTION__,v); duk_push_context_dump(ctx); return duk_push_error_object(ctx,DUK_ERR_ERROR,"[WebGL] [ERROR] %x",v); } kk::Log("[WebGL] %s",__FUNCTION__);
 #else
-#define KK_GL_ERROR
+#define KK_GL_ERROR(ctx)
 #endif
+        
         
         IMP_SCRIPT_CLASS_BEGIN_NOALLOC(nullptr, Context, WebGLContext)
         
@@ -147,6 +148,7 @@ namespace kk {
         /* FrontFaceDirection */
         IMP_SCRIPT_CONST_UINT(CW                             , GL_CW)
         IMP_SCRIPT_CONST_UINT(CCW                            , GL_CCW)
+        
         
         /* GetPName */
         IMP_SCRIPT_CONST_UINT(LINE_WIDTH                     , GL_LINE_WIDTH)
@@ -405,7 +407,7 @@ namespace kk {
         IMP_SCRIPT_CONST_UINT(DEPTH_COMPONENT16              , GL_DEPTH_COMPONENT16)
 //        IMP_SCRIPT_CONST_UINT(STENCIL_INDEX                  , GL_STENCIL_INDEX)
         IMP_SCRIPT_CONST_UINT(STENCIL_INDEX8                 , GL_STENCIL_INDEX8)
-//        IMP_SCRIPT_CONST_UINT(DEPTH_STENCIL                  , GL_DEPTH_STENCIL)
+        IMP_SCRIPT_CONST_UINT(DEPTH_STENCIL                  , GL_DEPTH_STENCIL)
         
         IMP_SCRIPT_CONST_UINT(RENDERBUFFER_WIDTH             , GL_RENDERBUFFER_WIDTH)
         IMP_SCRIPT_CONST_UINT(RENDERBUFFER_HEIGHT            , GL_RENDERBUFFER_HEIGHT)
@@ -425,7 +427,7 @@ namespace kk {
         IMP_SCRIPT_CONST_UINT(COLOR_ATTACHMENT0              , GL_COLOR_ATTACHMENT0)
         IMP_SCRIPT_CONST_UINT(DEPTH_ATTACHMENT               , GL_DEPTH_ATTACHMENT)
         IMP_SCRIPT_CONST_UINT(STENCIL_ATTACHMENT             , GL_STENCIL_ATTACHMENT)
-//        IMP_SCRIPT_CONST_UINT(DEPTH_STENCIL_ATTACHMENT       , GL_DEPTH_STENCIL_ATTACHMENT)
+        IMP_SCRIPT_CONST_UINT(DEPTH_STENCIL_ATTACHMENT       , GL_DEPTH_STENCIL_ATTACHMENT)
         
         IMP_SCRIPT_CONST_UINT(NONE                           , GL_NONE)
         
@@ -642,7 +644,7 @@ namespace kk {
         }
         
         duk_ret_t Context::duk_activeTexture(duk_context * ctx) {
-            glActiveTexture(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR
+            glActiveTexture(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -652,7 +654,7 @@ namespace kk {
             Shader * s = dynamic_cast<Shader *>(kk::script::toObjectArgument(ctx, 1));
             
             if(p && s) {
-                glAttachShader(p->value(), s->value()); KK_GL_ERROR
+                glAttachShader(p->value(), s->value()); KK_GL_ERROR(ctx)
             }
             
             return 0;
@@ -665,8 +667,7 @@ namespace kk {
             if(p ) {
                 glBindAttribLocation(p->value(),
                                      kk::script::toUintArgument(ctx, 1, 0),
-                                     kk::script::toStringArgument(ctx, 2, "").c_str()); KK_GL_ERROR
-                KK_GL_ERROR
+                                     kk::script::toStringArgument(ctx, 2, "").c_str()); KK_GL_ERROR(ctx)
             }
             
             return 0;
@@ -676,16 +677,18 @@ namespace kk {
             
             Buffer * p = dynamic_cast<Buffer *>(kk::script::toObjectArgument(ctx, 1));
             
-            glBindBuffer(kk::script::toUintArgument(ctx, 0, 0), p ? p->value() : 0); KK_GL_ERROR
+            glBindBuffer(kk::script::toUintArgument(ctx, 0, 0), p ? p->value() : 0); KK_GL_ERROR(ctx)
             
             return 0;
         }
         
         duk_ret_t Context::duk_bindFramebuffer(duk_context * ctx) {
             
+            GLenum target = kk::script::toUintArgument(ctx, 0, 0);
+            
             Framebuffer * p = dynamic_cast<Framebuffer *>(kk::script::toObjectArgument(ctx, 1));
             
-            glBindFramebuffer(kk::script::toUintArgument(ctx, 0, 0), p ? p->value() : 0); KK_GL_ERROR
+            glBindFramebuffer(target, p ? p->value() : 0); KK_GL_ERROR(ctx)
             
             return 0;
         }
@@ -694,7 +697,7 @@ namespace kk {
             
             Renderbuffer * p = dynamic_cast<Renderbuffer *>(kk::script::toObjectArgument(ctx, 1));
             
-            glBindRenderbuffer(kk::script::toUintArgument(ctx, 0, 0), p ? p->value() : 0); KK_GL_ERROR
+            glBindRenderbuffer(kk::script::toUintArgument(ctx, 0, 0), p ? p->value() : 0); KK_GL_ERROR(ctx)
             
             return 0;
         }
@@ -703,7 +706,7 @@ namespace kk {
             
             Texture * p = dynamic_cast<Texture *>(kk::script::toObjectArgument(ctx, 1));
             
-            glBindTexture(kk::script::toUintArgument(ctx, 0, 0), p ? p->value() : 0); KK_GL_ERROR
+            glBindTexture(kk::script::toUintArgument(ctx, 0, 0), p ? p->value() : 0); KK_GL_ERROR(ctx)
             
             return 0;
         }
@@ -712,24 +715,24 @@ namespace kk {
             glBlendColor(kk::script::toDoubleArgument(ctx, 0, 0),
                          kk::script::toDoubleArgument(ctx, 1, 0),
                          kk::script::toDoubleArgument(ctx, 2, 0),
-                         kk::script::toDoubleArgument(ctx, 3, 0)); KK_GL_ERROR
+                         kk::script::toDoubleArgument(ctx, 3, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_blendEquation(duk_context * ctx) {
-            glBlendEquation(kk::script::toUintArgument(ctx, 0,0 )); KK_GL_ERROR
+            glBlendEquation(kk::script::toUintArgument(ctx, 0,0 )); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_blendEquationSeparate(duk_context * ctx) {
             glBlendEquationSeparate(kk::script::toUintArgument(ctx, 0,0 ),
-                                    kk::script::toUintArgument(ctx, 1,0 )); KK_GL_ERROR
+                                    kk::script::toUintArgument(ctx, 1,0 )); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_blendFunc(duk_context * ctx) {
             glBlendFunc(kk::script::toUintArgument(ctx, 0,0 ),
-                        kk::script::toUintArgument(ctx, 1,0 )); KK_GL_ERROR
+                        kk::script::toUintArgument(ctx, 1,0 )); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -737,7 +740,7 @@ namespace kk {
             glBlendFuncSeparate(kk::script::toUintArgument(ctx, 0,0 ),
                                 kk::script::toUintArgument(ctx, 1,0 ),
                                 kk::script::toUintArgument(ctx, 2,0 ),
-                                kk::script::toUintArgument(ctx, 3,0 )); KK_GL_ERROR
+                                kk::script::toUintArgument(ctx, 3,0 )); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -760,7 +763,7 @@ namespace kk {
                     glBufferData(kk::script::toUintArgument(ctx, 0,0 ),
                                  n,
                                  data,
-                                 kk::script::toUintArgument(ctx, 2,0 )); KK_GL_ERROR
+                                 kk::script::toUintArgument(ctx, 2,0 )); KK_GL_ERROR(ctx)
                 }
             }
             
@@ -786,7 +789,7 @@ namespace kk {
                     glBufferSubData(kk::script::toUintArgument(ctx, 0,0 ),
                                     kk::script::toUintArgument(ctx, 1,0 ),
                                     n,
-                                    data); KK_GL_ERROR
+                                    data); KK_GL_ERROR(ctx)
                 }
             }
             
@@ -794,13 +797,13 @@ namespace kk {
         }
         
         duk_ret_t Context::duk_checkFramebufferStatus(duk_context * ctx) {
-            GLenum v = glCheckFramebufferStatus(kk::script::toUintArgument(ctx, 0,0 )); KK_GL_ERROR
+            GLenum v = glCheckFramebufferStatus(kk::script::toUintArgument(ctx, 0,0 )); KK_GL_ERROR(ctx)
             duk_push_uint(ctx, v);
             return 1;
         }
         
         duk_ret_t Context::duk_clear(duk_context * ctx) {
-            glClear(kk::script::toUintArgument(ctx, 0,0 )); KK_GL_ERROR
+            //glClear(kk::script::toUintArgument(ctx, 0,0 )); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -808,17 +811,17 @@ namespace kk {
             glClearColor(kk::script::toDoubleArgument(ctx, 0,0 ),
                          kk::script::toDoubleArgument(ctx, 1,0 ),
                          kk::script::toDoubleArgument(ctx, 2,0 ),
-                         kk::script::toDoubleArgument(ctx, 3,0 )); KK_GL_ERROR
+                         kk::script::toDoubleArgument(ctx, 3,0 )); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_clearDepth(duk_context * ctx) {
-            glClearDepthf(kk::script::toDoubleArgument(ctx, 0,0 )); KK_GL_ERROR
+            glClearDepthf(kk::script::toDoubleArgument(ctx, 0,0 )); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_clearStencil(duk_context * ctx) {
-            glClearStencil(kk::script::toIntArgument(ctx, 0,0 )); KK_GL_ERROR
+            glClearStencil(kk::script::toIntArgument(ctx, 0,0 )); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -826,7 +829,7 @@ namespace kk {
             glColorMask(kk::script::toBooleanArgument(ctx, 0,false),
                         kk::script::toBooleanArgument(ctx, 1,false),
                         kk::script::toBooleanArgument(ctx, 2,false),
-                        kk::script::toBooleanArgument(ctx, 3,false)); KK_GL_ERROR
+                        kk::script::toBooleanArgument(ctx, 3,false)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -835,7 +838,7 @@ namespace kk {
             Shader * v = dynamic_cast<Shader *>(kk::script::toObjectArgument(ctx, 0));
             
             if(v) {
-                glCompileShader(v->value()); KK_GL_ERROR
+                glCompileShader(v->value()); KK_GL_ERROR(ctx)
             }
             
             return 0;
@@ -857,7 +860,7 @@ namespace kk {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 6, &n);
                 
-                glCompressedTexImage2D(target, level, internalformat, width, height, border, (GLsizei) n, data); KK_GL_ERROR
+                glCompressedTexImage2D(target, level, internalformat, width, height, border, (GLsizei) n, data); KK_GL_ERROR(ctx)
                 
             }
             
@@ -881,7 +884,7 @@ namespace kk {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 7, &n);
                 
-                glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, (GLsizei) n, data); KK_GL_ERROR
+                glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, (GLsizei) n, data); KK_GL_ERROR(ctx)
                 
             }
             
@@ -899,7 +902,7 @@ namespace kk {
             GLsizei height          = kk::script::toUintArgument(ctx, 6, 0);
             GLint border            = kk::script::toIntArgument (ctx, 7, 0);
             
-            glCopyTexImage2D(target, level, internalformat, x, y, width, height, border); KK_GL_ERROR
+            glCopyTexImage2D(target, level, internalformat, x, y, width, height, border); KK_GL_ERROR(ctx)
             
             return 0;
         }
@@ -915,50 +918,50 @@ namespace kk {
             GLsizei width           = kk::script::toUintArgument(ctx, 6, 0);
             GLsizei height          = kk::script::toUintArgument(ctx, 7, 0);
             
-            glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height); KK_GL_ERROR
+            glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height); KK_GL_ERROR(ctx)
             
             return 0;
         }
         
         duk_ret_t Context::duk_createBuffer(duk_context * ctx) {
             GLuint v = 0;
-            glGenBuffers(1, &v); KK_GL_ERROR
+            glGenBuffers(1, &v); KK_GL_ERROR(ctx)
             kk::script::PushObject(ctx, new Buffer(v));
             return 1;
         }
         
         duk_ret_t Context::duk_createFramebuffer(duk_context * ctx) {
             GLuint v = 0;
-            glGenFramebuffers(1, &v); KK_GL_ERROR
+            glGenFramebuffers(1, &v); KK_GL_ERROR(ctx)
             kk::script::PushObject(ctx, new Framebuffer(v));
             return 1;
         }
         duk_ret_t Context::duk_createProgram(duk_context * ctx) {
-            GLuint v = glCreateProgram(); KK_GL_ERROR
+            GLuint v = glCreateProgram(); KK_GL_ERROR(ctx)
             kk::script::PushObject(ctx, new Program(v));
             return 1;
         }
         duk_ret_t Context::duk_createRenderbuffer(duk_context * ctx) {
             GLuint v = 0;
-            glGenRenderbuffers(1, &v); KK_GL_ERROR
+            glGenRenderbuffers(1, &v); KK_GL_ERROR(ctx)
             kk::script::PushObject(ctx, new Renderbuffer(v));
             return 1;
         }
         duk_ret_t Context::duk_createShader(duk_context * ctx) {
-            GLuint v = glCreateShader(kk::script::toUintArgument(ctx, 0, GL_VERTEX_SHADER)); KK_GL_ERROR
+            GLuint v = glCreateShader(kk::script::toUintArgument(ctx, 0, GL_VERTEX_SHADER)); KK_GL_ERROR(ctx)
             kk::script::PushObject(ctx, new Shader(v));
             return 1;
         }
         
         duk_ret_t Context::duk_createTexture(duk_context * ctx) {
             GLuint v = 0;
-            glGenTextures(1, &v); KK_GL_ERROR
+            glGenTextures(1, &v); KK_GL_ERROR(ctx)
             kk::script::PushObject(ctx, new Texture(v));
             return 1;
         }
         
         duk_ret_t Context::duk_cullFace(duk_context * ctx) {
-            glCullFace(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR
+            glCullFace(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -966,7 +969,7 @@ namespace kk {
             Buffer * v = dynamic_cast<Buffer *>(kk::script::toObjectArgument(ctx,0));
             if(v != nullptr) {
                 GLuint i = v->value();
-                glDeleteBuffers(1, &i); KK_GL_ERROR
+                glDeleteBuffers(1, &i); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -976,7 +979,7 @@ namespace kk {
             Framebuffer * v = dynamic_cast<Framebuffer *>(kk::script::toObjectArgument(ctx,0));
             if(v != nullptr) {
                 GLuint i = v->value();
-                glDeleteFramebuffers(1, &i); KK_GL_ERROR
+                glDeleteFramebuffers(1, &i); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -984,7 +987,7 @@ namespace kk {
         duk_ret_t Context::duk_deleteProgram(duk_context * ctx) {
             Program * v = dynamic_cast<Program *>(kk::script::toObjectArgument(ctx,0));
             if(v != nullptr) {
-                glDeleteProgram(v->value()); KK_GL_ERROR
+                glDeleteProgram(v->value()); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -993,7 +996,7 @@ namespace kk {
             Renderbuffer * v = dynamic_cast<Renderbuffer *>(kk::script::toObjectArgument(ctx,0));
             if(v != nullptr) {
                 GLuint i = v->value();
-                glDeleteRenderbuffers(1, &i); KK_GL_ERROR
+                glDeleteRenderbuffers(1, &i); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -1001,7 +1004,7 @@ namespace kk {
         duk_ret_t Context::duk_deleteShader(duk_context * ctx) {
             Shader * v = dynamic_cast<Shader *>(kk::script::toObjectArgument(ctx,0));
             if(v != nullptr) {
-                glDeleteShader(v->value()); KK_GL_ERROR
+                glDeleteShader(v->value()); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -1010,24 +1013,24 @@ namespace kk {
             Texture * v = dynamic_cast<Texture *>(kk::script::toObjectArgument(ctx,0));
             if(v != nullptr) {
                 GLuint i = v->value();
-                glDeleteTextures(1, &i); KK_GL_ERROR
+                glDeleteTextures(1, &i); KK_GL_ERROR(ctx)
             }
             return 0;
         }
         
         duk_ret_t Context::duk_depthFunc(duk_context * ctx) {
-            glDepthFunc(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR
+            glDepthFunc(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_depthMask(duk_context * ctx) {
-            glDepthMask(kk::script::toBooleanArgument(ctx, 0, 0)); KK_GL_ERROR
+            glDepthMask(kk::script::toBooleanArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_depthRange(duk_context * ctx) {
             glDepthRangef(kk::script::toDoubleArgument(ctx, 0, 0),
-                          kk::script::toDoubleArgument(ctx, 0, 0)); KK_GL_ERROR
+                          kk::script::toDoubleArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -1035,25 +1038,25 @@ namespace kk {
             Program * p = dynamic_cast<Program *>(kk::script::toObjectArgument(ctx, 0));
             Shader * s = dynamic_cast<Shader *>(kk::script::toObjectArgument(ctx, 1));
             if(p && s) {
-                glDetachShader(p->value(), s->value()); KK_GL_ERROR
+                glDetachShader(p->value(), s->value()); KK_GL_ERROR(ctx)
             }
             return 0;
         }
         
         duk_ret_t Context::duk_disable(duk_context * ctx) {
-            glDisable(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR
+            glDisable(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_disableVertexAttribArray(duk_context * ctx) {
-            glDisableVertexAttribArray(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR
+            glDisableVertexAttribArray(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_drawArrays(duk_context * ctx) {
             glDrawArrays(kk::script::toUintArgument(ctx, 0, 0),
                          kk::script::toIntArgument(ctx, 1, 0),
-                         kk::script::toUintArgument(ctx, 2, 0)); KK_GL_ERROR
+                         kk::script::toUintArgument(ctx, 2, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -1061,38 +1064,53 @@ namespace kk {
             glDrawElements(kk::script::toUintArgument(ctx, 0, 0),
                            kk::script::toUintArgument(ctx, 1, 0),
                            kk::script::toUintArgument(ctx, 2, 0),
-                           (void *)(long)kk::script::toUintArgument(ctx, 3, 0)); KK_GL_ERROR
+                           (void *)(long)kk::script::toUintArgument(ctx, 3, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_enable(duk_context * ctx) {
-            glEnable(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR
+            glEnable(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_enableVertexAttribArray(duk_context * ctx) {
-            glEnableVertexAttribArray(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR
+            glEnableVertexAttribArray(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_finish(duk_context * ctx) {
-            glFinish(); KK_GL_ERROR
+            glFinish(); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_flush(duk_context * ctx) {
-            glFlush(); KK_GL_ERROR
+            glFlush(); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_framebufferRenderbuffer(duk_context * ctx) {
+            
+            GLenum target               = kk::script::toUintArgument(ctx, 0, 0);
+            GLenum attachment           = kk::script::toUintArgument(ctx, 1, 0);
+            GLenum renderbuffertarget   = kk::script::toUintArgument(ctx, 2, 0);
+            
             Renderbuffer * v = dynamic_cast<Renderbuffer *>( kk::script::toObjectArgument(ctx, 3) );
             
+            if(attachment == GL_DEPTH_STENCIL_ATTACHMENT) {
+                glFramebufferRenderbuffer(target,
+                                          GL_DEPTH_ATTACHMENT,
+                                          renderbuffertarget,
+                                          v ? v->value() : 0); KK_GL_ERROR(ctx)
+                glFramebufferRenderbuffer(target,
+                                          GL_STENCIL_ATTACHMENT,
+                                          renderbuffertarget,
+                                          v ? v->value() : 0); KK_GL_ERROR(ctx)
+            }
             if(v) {
-                glFramebufferRenderbuffer(kk::script::toUintArgument(ctx, 0, 0),
-                                          kk::script::toUintArgument(ctx, 1, 0),
-                                          kk::script::toUintArgument(ctx, 2, 0),
-                                          v->value()); KK_GL_ERROR
+                glFramebufferRenderbuffer(target,
+                                          attachment,
+                                          renderbuffertarget,
+                                          v ? v->value() : 0); KK_GL_ERROR(ctx)
             }
             
             return 0;
@@ -1107,19 +1125,19 @@ namespace kk {
                                        kk::script::toUintArgument(ctx, 1, 0),
                                        kk::script::toUintArgument(ctx, 2, 0),
                                        v->value(),
-                                       kk::script::toIntArgument(ctx, 4, 0)); KK_GL_ERROR
+                                       kk::script::toIntArgument(ctx, 4, 0)); KK_GL_ERROR(ctx)
             }
             
             return 0;
         }
         
         duk_ret_t Context::duk_frontFace(duk_context * ctx) {
-            glFrontFace(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR
+            glFrontFace(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_generateMipmap(duk_context * ctx) {
-            glGenerateMipmap(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR
+            glGenerateMipmap(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -1140,7 +1158,7 @@ namespace kk {
                                   &length,
                                   &size,
                                   &type,
-                                  name); KK_GL_ERROR
+                                  name); KK_GL_ERROR(ctx)
                 
                 duk_push_object(ctx);
             
@@ -1179,7 +1197,7 @@ namespace kk {
                                   &length,
                                   &size,
                                   &type,
-                                  name); KK_GL_ERROR
+                                  name); KK_GL_ERROR(ctx)
                 
                 duk_push_object(ctx);
                 
@@ -1210,7 +1228,7 @@ namespace kk {
                 GLuint vs[64];
                 GLsizei n = 0;
                 
-                glGetAttachedShaders(v->value(), 64, &n, vs); KK_GL_ERROR
+                glGetAttachedShaders(v->value(), 64, &n, vs); KK_GL_ERROR(ctx)
                 
                 duk_push_array(ctx);
                 
@@ -1230,7 +1248,7 @@ namespace kk {
             Program * v = dynamic_cast<Program *>( kk::script::toObjectArgument(ctx, 0) );
             
             if(v) {
-                GLint i = glGetAttribLocation(v->value(), kk::script::toStringArgument(ctx, 1, "").c_str()); KK_GL_ERROR
+                GLint i = glGetAttribLocation(v->value(), kk::script::toStringArgument(ctx, 1, "").c_str()); KK_GL_ERROR(ctx)
                 duk_push_int(ctx, i);
                 return 1;
             }
@@ -1242,7 +1260,7 @@ namespace kk {
             GLint v = 0;
             glGetBufferParameteriv(kk::script::toUintArgument(ctx, 0, 0),
                                    kk::script::toUintArgument(ctx, 1, 0),
-                                   &v); KK_GL_ERROR
+                                   &v); KK_GL_ERROR(ctx)
             duk_push_int(ctx, v);
             return 1;
         }
@@ -1287,13 +1305,13 @@ namespace kk {
                 }
             }
             
-            KK_GL_ERROR
+            KK_GL_ERROR(ctx)
             
             return 0;
         }
         
         duk_ret_t Context::duk_getError(duk_context * ctx) {
-            GLenum v = glGetError(); KK_GL_ERROR
+            GLenum v = glGetError(); KK_GL_ERROR(ctx)
             duk_push_uint(ctx, v);
             return 1;
         }
@@ -1304,7 +1322,7 @@ namespace kk {
             glGetFramebufferAttachmentParameteriv(kk::script::toUintArgument(ctx, 0, 0),
                                                   kk::script::toUintArgument(ctx, 1, 0),
                                                   kk::script::toUintArgument(ctx, 2, 0),
-                                                  &v); KK_GL_ERROR
+                                                  &v); KK_GL_ERROR(ctx)
             
             duk_push_int(ctx, v);
             
@@ -1317,7 +1335,7 @@ namespace kk {
             
             if(v) {
                 GLint i = 0;
-                glGetProgramiv(v->value(), kk::script::toUintArgument(ctx, 1, 0), &i); KK_GL_ERROR
+                glGetProgramiv(v->value(), kk::script::toUintArgument(ctx, 1, 0), &i); KK_GL_ERROR(ctx)
                 duk_push_int(ctx, i);
                 return 1;
             }
@@ -1333,7 +1351,7 @@ namespace kk {
             if(v) {
                 GLsizei n =0;
                 char data[2048] = "";
-                glGetProgramInfoLog(v->value(), sizeof(data), &n, data); KK_GL_ERROR
+                glGetProgramInfoLog(v->value(), sizeof(data), &n, data); KK_GL_ERROR(ctx)
                 duk_push_lstring(ctx, data, n);
                 return 1;
             }
@@ -1345,7 +1363,7 @@ namespace kk {
             GLint v = 0;
             glGetRenderbufferParameteriv(kk::script::toUintArgument(ctx, 0, 0),
                                          kk::script::toUintArgument(ctx, 1, 0),
-                                         &v); KK_GL_ERROR
+                                         &v); KK_GL_ERROR(ctx)
             
             duk_push_int(ctx, v);
             
@@ -1358,7 +1376,7 @@ namespace kk {
             
             if(v) {
                 GLint i = 0;
-                glGetShaderiv(v->value(), kk::script::toUintArgument(ctx, 1, 0), &i); KK_GL_ERROR
+                glGetShaderiv(v->value(), kk::script::toUintArgument(ctx, 1, 0), &i); KK_GL_ERROR(ctx)
                 duk_push_int(ctx, i);
                 return 1;
             }
@@ -1374,7 +1392,7 @@ namespace kk {
             glGetShaderPrecisionFormat(shadertype,
                                        precisiontype,
                                        &range,
-                                       &precision); KK_GL_ERROR
+                                       &precision); KK_GL_ERROR(ctx)
             duk_push_object(ctx);
             duk_push_int(ctx, range);
             duk_put_prop_string(ctx, -2, "rangeMin");
@@ -1395,7 +1413,7 @@ namespace kk {
             if(v) {
                 char data[2048];
                 GLsizei n = 0;
-                glGetShaderInfoLog(v->value(), sizeof(data), &n, data); KK_GL_ERROR
+                glGetShaderInfoLog(v->value(), sizeof(data), &n, data); KK_GL_ERROR(ctx)
                 duk_push_lstring(ctx, data, n);
                 return 1;
             }
@@ -1410,7 +1428,7 @@ namespace kk {
             if(v) {
                 char data[20480];
                 GLsizei n = 0;
-                glGetShaderSource(v->value(), sizeof(data), &n, data); KK_GL_ERROR
+                glGetShaderSource(v->value(), sizeof(data), &n, data); KK_GL_ERROR(ctx)
                 duk_push_lstring(ctx, data, n);
                 return 1;
             }
@@ -1423,7 +1441,7 @@ namespace kk {
             GLint i = 0;
             
             glGetTexParameteriv(kk::script::toUintArgument(ctx, 0, 0),
-                                kk::script::toUintArgument(ctx, 1, 0), &i); KK_GL_ERROR
+                                kk::script::toUintArgument(ctx, 1, 0), &i); KK_GL_ERROR(ctx)
             
             duk_push_int(ctx, i);
     
@@ -1438,7 +1456,7 @@ namespace kk {
                 GLint i = 0;
                 glGetUniformiv(v->value(),
                                kk::script::toIntArgument(ctx, 1, 0),
-                               &i); KK_GL_ERROR
+                               &i); KK_GL_ERROR(ctx)
                 duk_push_int(ctx, i);
                 return 1;
             }
@@ -1452,7 +1470,7 @@ namespace kk {
             
             if(v) {
                 
-                int i = glGetUniformLocation(v->value(), kk::script::toStringArgument(ctx, 1, "").c_str()); KK_GL_ERROR
+                int i = glGetUniformLocation(v->value(), kk::script::toStringArgument(ctx, 1, "").c_str()); KK_GL_ERROR(ctx)
                 
                 duk_push_int(ctx, i);
                 return 1;
@@ -1466,7 +1484,7 @@ namespace kk {
             GLint i = 0;
             
             glGetVertexAttribiv(kk::script::toUintArgument(ctx, 0, 0),
-                                kk::script::toUintArgument(ctx, 1, 0), &i); KK_GL_ERROR
+                                kk::script::toUintArgument(ctx, 1, 0), &i); KK_GL_ERROR(ctx)
             
             duk_push_int(ctx, i);
             return 1;
@@ -1480,73 +1498,73 @@ namespace kk {
         
         duk_ret_t Context::duk_hint(duk_context * ctx) {
             glHint(kk::script::toUintArgument(ctx, 0, 0),
-                   kk::script::toUintArgument(ctx, 1, 0)); KK_GL_ERROR
+                   kk::script::toUintArgument(ctx, 1, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_isBuffer(duk_context * ctx) {
             Buffer * v = dynamic_cast<Buffer *>( kk::script::toObjectArgument(ctx, 0) );
-            duk_push_boolean(ctx, v != nullptr && glIsBuffer(v->value())); KK_GL_ERROR
+            duk_push_boolean(ctx, v != nullptr && glIsBuffer(v->value())); KK_GL_ERROR(ctx)
             return 1;
         }
         
         duk_ret_t Context::duk_isEnabled(duk_context * ctx) {
-            glIsEnabled(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR
+            glIsEnabled(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_isFramebuffer(duk_context * ctx) {
             Framebuffer * v = dynamic_cast<Framebuffer *>( kk::script::toObjectArgument(ctx, 0) );
-            duk_push_boolean(ctx, v != nullptr && glIsFramebuffer(v->value())); KK_GL_ERROR
+            duk_push_boolean(ctx, v != nullptr && glIsFramebuffer(v->value())); KK_GL_ERROR(ctx)
             return 1;
         }
         
         duk_ret_t Context::duk_isProgram(duk_context * ctx) {
             Program * v = dynamic_cast<Program *>( kk::script::toObjectArgument(ctx, 0) );
-            duk_push_boolean(ctx, v != nullptr && glIsProgram(v->value())); KK_GL_ERROR
+            duk_push_boolean(ctx, v != nullptr && glIsProgram(v->value())); KK_GL_ERROR(ctx)
             return 1;
         }
         
         duk_ret_t Context::duk_isRenderbuffer(duk_context * ctx) {
             Renderbuffer * v = dynamic_cast<Renderbuffer *>( kk::script::toObjectArgument(ctx, 0) );
-            duk_push_boolean(ctx, v != nullptr && glIsRenderbuffer(v->value())); KK_GL_ERROR
+            duk_push_boolean(ctx, v != nullptr && glIsRenderbuffer(v->value())); KK_GL_ERROR(ctx)
             return 1;
         }
         
         duk_ret_t Context::duk_isShader(duk_context * ctx) {
             Shader * v = dynamic_cast<Shader *>( kk::script::toObjectArgument(ctx, 0) );
-            duk_push_boolean(ctx, v != nullptr && glIsShader(v->value())); KK_GL_ERROR
+            duk_push_boolean(ctx, v != nullptr && glIsShader(v->value())); KK_GL_ERROR(ctx)
             return 1;
         }
         
         duk_ret_t Context::duk_isTexture(duk_context * ctx) {
             Texture * v = dynamic_cast<Texture *>( kk::script::toObjectArgument(ctx, 0) );
-            duk_push_boolean(ctx, v != nullptr && glIsTexture(v->value())); KK_GL_ERROR
+            duk_push_boolean(ctx, v != nullptr && glIsTexture(v->value())); KK_GL_ERROR(ctx)
             return 1;
         }
         
         duk_ret_t Context::duk_lineWidth(duk_context * ctx) {
-            glLineWidth(kk::script::toDoubleArgument(ctx, 0, 0)); KK_GL_ERROR
+            glLineWidth(kk::script::toDoubleArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_linkProgram(duk_context * ctx) {
             Program * v = dynamic_cast<Program *>( kk::script::toObjectArgument(ctx, 0) );
             if(v != nullptr) {
-                glLinkProgram(v->value()); KK_GL_ERROR
+                glLinkProgram(v->value()); KK_GL_ERROR(ctx)
             }
             return 0;
         }
         
         duk_ret_t Context::duk_pixelStorei(duk_context * ctx) {
             glPixelStorei(kk::script::toUintArgument(ctx, 0, 0),
-                          kk::script::toIntArgument(ctx, 1, 0)); KK_GL_ERROR
+                          kk::script::toIntArgument(ctx, 1, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_polygonOffset(duk_context * ctx) {
             glPolygonOffset(kk::script::toDoubleArgument(ctx, 0, 0),
-                            kk::script::toDoubleArgument(ctx, 1, 0)); KK_GL_ERROR
+                            kk::script::toDoubleArgument(ctx, 1, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -1563,7 +1581,7 @@ namespace kk {
                              kk::script::toUintArgument(ctx, 3, 0),
                              kk::script::toUintArgument(ctx, 4, 0),
                              kk::script::toUintArgument(ctx, 5, 0),
-                             data); KK_GL_ERROR
+                             data); KK_GL_ERROR(ctx)
             }
             
             return 0;
@@ -1571,10 +1589,16 @@ namespace kk {
         
         duk_ret_t Context::duk_renderbufferStorage(duk_context * ctx) {
             
-            glRenderbufferStorage(kk::script::toUintArgument(ctx, 0, 0),
-                                  kk::script::toUintArgument(ctx, 1, 0),
-                                  kk::script::toUintArgument(ctx, 2, 0),
-                                  kk::script::toUintArgument(ctx, 3, 0)); KK_GL_ERROR
+            GLenum target           = kk::script::toUintArgument(ctx, 0, 0);
+            GLenum internalformat   = kk::script::toUintArgument(ctx, 1, 0);
+            GLsizei width           = kk::script::toUintArgument(ctx, 2, 0);
+            GLsizei height          = kk::script::toUintArgument(ctx, 3, 0);
+            
+            if(internalformat == GL_DEPTH_STENCIL) {
+                glRenderbufferStorageOES(target, GL_DEPTH24_STENCIL8_OES, width, height); KK_GL_ERROR(ctx)
+            } else {
+                glRenderbufferStorage(target, internalformat, width, height); KK_GL_ERROR(ctx)
+            }
             
             return 0;
         }
@@ -1582,7 +1606,7 @@ namespace kk {
         duk_ret_t Context::duk_sampleCoverage(duk_context * ctx) {
             
             glSampleCoverage(kk::script::toDoubleArgument(ctx, 0, 0),
-                             kk::script::toBooleanArgument(ctx, 1, 0)); KK_GL_ERROR
+                             kk::script::toBooleanArgument(ctx, 1, 0)); KK_GL_ERROR(ctx)
             
             return 0;
         }
@@ -1592,7 +1616,7 @@ namespace kk {
             glScissor(kk::script::toUintArgument(ctx, 0, 0),
                       kk::script::toUintArgument(ctx, 1, 0),
                       kk::script::toUintArgument(ctx, 2, 0),
-                      kk::script::toUintArgument(ctx, 3, 0)); KK_GL_ERROR
+                      kk::script::toUintArgument(ctx, 3, 0)); KK_GL_ERROR(ctx)
             
             return 0;
         }
@@ -1606,7 +1630,7 @@ namespace kk {
                 kk::String s = kk::script::toStringArgument(ctx, 1, "");
                 kk::CString code = s.c_str();
                 
-                glShaderSource(v->value(), 1, &code, NULL); KK_GL_ERROR
+                glShaderSource(v->value(), 1, &code, NULL); KK_GL_ERROR(ctx)
             }
             
             return 0;
@@ -1616,7 +1640,7 @@ namespace kk {
             
             glStencilFunc(kk::script::toUintArgument(ctx, 0, 0),
                           kk::script::toIntArgument(ctx, 1, 0),
-                          kk::script::toUintArgument(ctx, 2, 0)); KK_GL_ERROR
+                          kk::script::toUintArgument(ctx, 2, 0)); KK_GL_ERROR(ctx)
             
             return 0;
         }
@@ -1626,19 +1650,19 @@ namespace kk {
             glStencilFuncSeparate(kk::script::toUintArgument(ctx, 0, 0),
                                   kk::script::toUintArgument(ctx, 1, 0),
                                   kk::script::toIntArgument(ctx, 2, 0),
-                                  kk::script::toUintArgument(ctx, 3, 0)); KK_GL_ERROR
+                                  kk::script::toUintArgument(ctx, 3, 0)); KK_GL_ERROR(ctx)
             
             return 0;
         }
         
         duk_ret_t Context::duk_stencilMask(duk_context * ctx) {
-            glStencilMask(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR
+            glStencilMask(kk::script::toUintArgument(ctx, 0, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_stencilMaskSeparate(duk_context * ctx) {
             glStencilMaskSeparate(kk::script::toUintArgument(ctx, 0, 0),
-                                  kk::script::toUintArgument(ctx, 1, 0)); KK_GL_ERROR
+                                  kk::script::toUintArgument(ctx, 1, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -1646,7 +1670,7 @@ namespace kk {
             
             glStencilOp(kk::script::toUintArgument(ctx, 0, 0),
                         kk::script::toUintArgument(ctx, 1, 0),
-                        kk::script::toUintArgument(ctx, 2, 0)); KK_GL_ERROR
+                        kk::script::toUintArgument(ctx, 2, 0)); KK_GL_ERROR(ctx)
             
             return 0;
         }
@@ -1656,7 +1680,7 @@ namespace kk {
             glStencilOpSeparate(kk::script::toUintArgument(ctx, 0, 0),
                                 kk::script::toUintArgument(ctx, 1, 0),
                                 kk::script::toUintArgument(ctx, 2, 0),
-                                kk::script::toUintArgument(ctx, 3, 0)); KK_GL_ERROR
+                                kk::script::toUintArgument(ctx, 3, 0)); KK_GL_ERROR(ctx)
             
             return 0;
         }
@@ -1680,7 +1704,7 @@ namespace kk {
                 if(duk_is_buffer_data(ctx, -top + 8)) {
                     size_t n = 0;
                     void * data = duk_get_buffer_data(ctx, -top + 8, &n);
-                    glTexImage2D(target, level, internalformat, width, height, border, format, type, data); KK_GL_ERROR
+                    glTexImage2D(target, level, internalformat, width, height, border, format, type, data); KK_GL_ERROR(ctx)
                 }
                 
             } else {
@@ -1700,7 +1724,7 @@ namespace kk {
                     void * data = malloc(width * height * 4);
                     memset(data, 0, width * height * 4);
                     image->copyPixels(data);
-                    glTexImage2D(target, level, internalformat, width, height, border, format, type, data); KK_GL_ERROR
+                    glTexImage2D(target, level, internalformat, width, height, border, format, type, data); KK_GL_ERROR(ctx)
                     free(data);
                 }
                 
@@ -1712,14 +1736,14 @@ namespace kk {
         duk_ret_t Context::duk_texParameterf(duk_context * ctx) {
             glTexParameterf(kk::script::toUintArgument(ctx, 0, 0),
                             kk::script::toUintArgument(ctx, 1, 0),
-                            kk::script::toDoubleArgument(ctx, 2, 0)); KK_GL_ERROR
+                            kk::script::toDoubleArgument(ctx, 2, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
         duk_ret_t Context::duk_texParameteri(duk_context * ctx) {
             glTexParameteri(kk::script::toUintArgument(ctx, 0, 0),
                             kk::script::toUintArgument(ctx, 1, 0),
-                            kk::script::toIntArgument(ctx, 2, 0)); KK_GL_ERROR
+                            kk::script::toIntArgument(ctx, 2, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -1741,7 +1765,7 @@ namespace kk {
                 if(duk_is_buffer_data(ctx, -top + 7)) {
                     size_t n = 0;
                     void * data = duk_get_buffer_data(ctx, -top + 7, &n);
-                    glTexSubImage2D(target, level,xoffset,yoffset, width, height, format, type, data); KK_GL_ERROR
+                    glTexSubImage2D(target, level,xoffset,yoffset, width, height, format, type, data); KK_GL_ERROR(ctx)
                 }
                 
             } else {
@@ -1761,7 +1785,7 @@ namespace kk {
                     void * data = malloc(width * height * 4);
                     memset(data, 0, width * height * 4);
                     image->copyPixels(data);
-                    glTexSubImage2D(target, level, xoffset,yoffset, width, height, format, type, data); KK_GL_ERROR
+                    glTexSubImage2D(target, level, xoffset,yoffset, width, height, format, type, data); KK_GL_ERROR(ctx)
                     free(data);
                 }
                 
@@ -1772,7 +1796,7 @@ namespace kk {
         
         duk_ret_t Context::duk_uniform1f(duk_context * ctx) {
             glUniform1f(kk::script::toUintArgument(ctx, 0, 0),
-                        kk::script::toDoubleArgument(ctx, 1, 0)); KK_GL_ERROR
+                        kk::script::toDoubleArgument(ctx, 1, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         duk_ret_t Context::duk_uniform1fv(duk_context * ctx) {
@@ -1782,14 +1806,14 @@ namespace kk {
                 void * data = duk_get_buffer_data(ctx, -top + 1, &n);
                 glUniform1fv(kk::script::toUintArgument(ctx, 0, 0),
                              (GLsizei) (n / sizeof(GLfloat)),
-                             (GLfloat *) data); KK_GL_ERROR
+                             (GLfloat *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
         
         duk_ret_t Context::duk_uniform1i(duk_context * ctx) {
             glUniform1i(kk::script::toUintArgument(ctx, 0, 0),
-                        kk::script::toIntArgument(ctx, 1, 0)); KK_GL_ERROR
+                        kk::script::toIntArgument(ctx, 1, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -1800,14 +1824,14 @@ namespace kk {
                 void * data = duk_get_buffer_data(ctx, -top + 1, &n);
                 glUniform1iv(kk::script::toUintArgument(ctx, 0, 0),
                              (GLsizei) (n / sizeof(GLint)),
-                             (GLint *) data); KK_GL_ERROR
+                             (GLint *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
         duk_ret_t Context::duk_uniform2f(duk_context * ctx) {
             glUniform2f(kk::script::toUintArgument(ctx, 0, 0),
                         kk::script::toDoubleArgument(ctx, 1, 0),
-                        kk::script::toDoubleArgument(ctx, 2, 0)); KK_GL_ERROR
+                        kk::script::toDoubleArgument(ctx, 2, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         duk_ret_t Context::duk_uniform2fv(duk_context * ctx) {
@@ -1816,15 +1840,15 @@ namespace kk {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 1, &n);
                 glUniform2fv(kk::script::toUintArgument(ctx, 0, 0),
-                             (GLsizei) (n / sizeof(GLfloat)),
-                             (GLfloat *) data); KK_GL_ERROR
+                             (GLsizei) (n / sizeof(GLfloat) / 2),
+                             (GLfloat *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
         duk_ret_t Context::duk_uniform2i(duk_context * ctx) {
             glUniform2i(kk::script::toUintArgument(ctx, 0, 0),
                         kk::script::toIntArgument(ctx, 1, 0),
-                        kk::script::toIntArgument(ctx, 2, 0)); KK_GL_ERROR
+                        kk::script::toIntArgument(ctx, 2, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         duk_ret_t Context::duk_uniform2iv(duk_context * ctx) {
@@ -1833,8 +1857,8 @@ namespace kk {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 1, &n);
                 glUniform2iv(kk::script::toUintArgument(ctx, 0, 0),
-                             (GLsizei) (n / sizeof(GLint)),
-                             (GLint *) data); KK_GL_ERROR
+                             (GLsizei) (n / sizeof(GLint) / 2),
+                             (GLint *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -1842,7 +1866,7 @@ namespace kk {
             glUniform3f(kk::script::toUintArgument(ctx, 0, 0),
                         kk::script::toDoubleArgument(ctx, 1, 0),
                         kk::script::toDoubleArgument(ctx, 2, 0),
-                        kk::script::toDoubleArgument(ctx, 3, 0)); KK_GL_ERROR
+                        kk::script::toDoubleArgument(ctx, 3, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         duk_ret_t Context::duk_uniform3fv(duk_context * ctx) {
@@ -1851,8 +1875,8 @@ namespace kk {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 1, &n);
                 glUniform3fv(kk::script::toUintArgument(ctx, 0, 0),
-                             (GLsizei) (n / sizeof(GLfloat)),
-                             (GLfloat *) data); KK_GL_ERROR
+                             (GLsizei) (n / sizeof(GLfloat) / 3),
+                             (GLfloat *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -1860,7 +1884,7 @@ namespace kk {
             glUniform3i(kk::script::toUintArgument(ctx, 0, 0),
                         kk::script::toIntArgument(ctx, 1, 0),
                         kk::script::toIntArgument(ctx, 2, 0),
-                        kk::script::toIntArgument(ctx, 3, 0)); KK_GL_ERROR
+                        kk::script::toIntArgument(ctx, 3, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         duk_ret_t Context::duk_uniform3iv(duk_context * ctx) {
@@ -1869,8 +1893,8 @@ namespace kk {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 1, &n);
                 glUniform3iv(kk::script::toUintArgument(ctx, 0, 0),
-                             (GLsizei) (n / sizeof(GLint)),
-                             (GLint *) data); KK_GL_ERROR
+                             (GLsizei) (n / sizeof(GLint) / 3),
+                             (GLint *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -1879,7 +1903,7 @@ namespace kk {
                         kk::script::toDoubleArgument(ctx, 1, 0),
                         kk::script::toDoubleArgument(ctx, 2, 0),
                         kk::script::toDoubleArgument(ctx, 3, 0),
-                        kk::script::toDoubleArgument(ctx, 4, 0)); KK_GL_ERROR
+                        kk::script::toDoubleArgument(ctx, 4, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         duk_ret_t Context::duk_uniform4fv(duk_context * ctx) {
@@ -1888,8 +1912,8 @@ namespace kk {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 1, &n);
                 glUniform4fv(kk::script::toUintArgument(ctx, 0, 0),
-                             (GLsizei) (n / sizeof(GLfloat)),
-                             (GLfloat *) data); KK_GL_ERROR
+                             (GLsizei) (n / sizeof(GLfloat) / 4),
+                             (GLfloat *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -1898,7 +1922,7 @@ namespace kk {
                         kk::script::toIntArgument(ctx, 1, 0),
                         kk::script::toIntArgument(ctx, 2, 0),
                         kk::script::toIntArgument(ctx, 3, 0),
-                        kk::script::toIntArgument(ctx, 4, 0)); KK_GL_ERROR
+                        kk::script::toIntArgument(ctx, 4, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         duk_ret_t Context::duk_uniform4iv(duk_context * ctx) {
@@ -1907,8 +1931,8 @@ namespace kk {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 1, &n);
                 glUniform4iv(kk::script::toUintArgument(ctx, 0, 0),
-                                   (GLsizei) (n / sizeof(GLint)),
-                                   (GLint *) data); KK_GL_ERROR
+                                   (GLsizei) (n / sizeof(GLint) / 4),
+                                   (GLint *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -1919,33 +1943,37 @@ namespace kk {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 2, &n);
                 glUniformMatrix2fv(kk::script::toUintArgument(ctx, 0, 0),
-                                   (GLsizei) (n / sizeof(GLfloat)),
+                                   (GLsizei) (n / sizeof(GLfloat) / 4),
                                    kk::script::toBooleanArgument(ctx, 1, 0),
-                                   (GLfloat *) data); KK_GL_ERROR
+                                   (GLfloat *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
         duk_ret_t Context::duk_uniformMatrix3fv(duk_context * ctx) {
             int top = duk_get_top(ctx);
             if(top > 2 && duk_is_buffer_data(ctx, -top + 2)) {
+                GLint location = kk::script::toIntArgument(ctx, 0, 0);
+                GLboolean transpose = kk::script::toBooleanArgument(ctx, 1, 0);
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 2, &n);
-                glUniformMatrix3fv(kk::script::toUintArgument(ctx, 0, 0),
-                                   (GLsizei) (n / sizeof(GLfloat)),
-                                   kk::script::toBooleanArgument(ctx, 1, 0),
-                                   (GLfloat *) data); KK_GL_ERROR
+                glUniformMatrix3fv(location,
+                                   (GLsizei) (n / sizeof(GLfloat) / 9),
+                                   transpose,
+                                   (GLfloat *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
         duk_ret_t Context::duk_uniformMatrix4fv(duk_context * ctx) {
             int top = duk_get_top(ctx);
             if(top > 2 && duk_is_buffer_data(ctx, -top + 2)) {
+                GLint location = kk::script::toIntArgument(ctx, 0, 0);
+                GLboolean transpose = kk::script::toBooleanArgument(ctx, 1, 0);
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 2, &n);
-                glUniformMatrix4fv(kk::script::toUintArgument(ctx, 0, 0),
-                                   (GLsizei) (n / sizeof(GLfloat)),
-                                   kk::script::toBooleanArgument(ctx, 1, 0),
-                                   (GLfloat *) data); KK_GL_ERROR
+                glUniformMatrix4fv(location,
+                                   (GLsizei) (n / sizeof(GLfloat) / 16),
+                                   transpose,
+                                   (GLfloat *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -1954,7 +1982,7 @@ namespace kk {
             
             Program * p = dynamic_cast<Program *>(kk::script::toObjectArgument(ctx, 0));
             
-            glUseProgram(p ? p->value() : 0); KK_GL_ERROR
+            glUseProgram(p ? p->value() : 0); KK_GL_ERROR(ctx)
             
             return 0;
         }
@@ -1964,7 +1992,7 @@ namespace kk {
             Program * p = dynamic_cast<Program *>(kk::script::toObjectArgument(ctx, 0));
             
             if(p) {
-                glValidateProgram(p->value()); KK_GL_ERROR
+                glValidateProgram(p->value()); KK_GL_ERROR(ctx)
             }
             
             return 0;
@@ -1972,7 +2000,7 @@ namespace kk {
         
         duk_ret_t Context::duk_vertexAttrib1f(duk_context * ctx) {
             glVertexAttrib1f(kk::script::toUintArgument(ctx, 0, 0),
-                             kk::script::toDoubleArgument(ctx, 1, 0)); KK_GL_ERROR
+                             kk::script::toDoubleArgument(ctx, 1, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -1981,14 +2009,14 @@ namespace kk {
             if(top > 1 && duk_is_buffer_data(ctx, -top + 1)) {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 1, &n);
-                glVertexAttrib1fv(kk::script::toUintArgument(ctx, 0, 0), (GLfloat *) data); KK_GL_ERROR
+                glVertexAttrib1fv(kk::script::toUintArgument(ctx, 0, 0), (GLfloat *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
         duk_ret_t Context::duk_vertexAttrib2f(duk_context * ctx) {
             glVertexAttrib2f(kk::script::toUintArgument(ctx, 0, 0),
                              kk::script::toDoubleArgument(ctx, 1, 0),
-                             kk::script::toDoubleArgument(ctx, 2, 0)); KK_GL_ERROR
+                             kk::script::toDoubleArgument(ctx, 2, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         duk_ret_t Context::duk_vertexAttrib2fv(duk_context * ctx) {
@@ -1996,7 +2024,7 @@ namespace kk {
             if(top > 1 && duk_is_buffer_data(ctx, -top + 1)) {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 1, &n);
-                glVertexAttrib2fv(kk::script::toUintArgument(ctx, 0, 0), (GLfloat *) data); KK_GL_ERROR
+                glVertexAttrib2fv(kk::script::toUintArgument(ctx, 0, 0), (GLfloat *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -2004,7 +2032,7 @@ namespace kk {
             glVertexAttrib3f(kk::script::toUintArgument(ctx, 0, 0),
                              kk::script::toDoubleArgument(ctx, 1, 0),
                              kk::script::toDoubleArgument(ctx, 2, 0),
-                             kk::script::toDoubleArgument(ctx, 3, 0)); KK_GL_ERROR
+                             kk::script::toDoubleArgument(ctx, 3, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         duk_ret_t Context::duk_vertexAttrib3fv(duk_context * ctx) {
@@ -2012,7 +2040,7 @@ namespace kk {
             if(top > 1 && duk_is_buffer_data(ctx, -top + 1)) {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 1, &n);
-                glVertexAttrib3fv(kk::script::toUintArgument(ctx, 0, 0), (GLfloat *) data); KK_GL_ERROR
+                glVertexAttrib3fv(kk::script::toUintArgument(ctx, 0, 0), (GLfloat *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -2021,7 +2049,7 @@ namespace kk {
                              kk::script::toDoubleArgument(ctx, 1, 0),
                              kk::script::toDoubleArgument(ctx, 2, 0),
                              kk::script::toDoubleArgument(ctx, 3, 0),
-                             kk::script::toDoubleArgument(ctx, 4, 0)); KK_GL_ERROR
+                             kk::script::toDoubleArgument(ctx, 4, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         duk_ret_t Context::duk_vertexAttrib4fv(duk_context * ctx) {
@@ -2029,7 +2057,7 @@ namespace kk {
             if(top > 1 && duk_is_buffer_data(ctx, -top + 1)) {
                 size_t n = 0;
                 void * data = duk_get_buffer_data(ctx, -top + 1, &n);
-                glVertexAttrib4fv(kk::script::toUintArgument(ctx, 0, 0), (GLfloat *) data); KK_GL_ERROR
+                glVertexAttrib4fv(kk::script::toUintArgument(ctx, 0, 0), (GLfloat *) data); KK_GL_ERROR(ctx)
             }
             return 0;
         }
@@ -2039,7 +2067,7 @@ namespace kk {
                                   kk::script::toUintArgument(ctx, 2, 0),
                                   kk::script::toBooleanArgument(ctx, 3, 0),
                                   kk::script::toUintArgument(ctx, 4, 0),
-                                  (void *) (long) kk::script::toIntArgument(ctx, 5, 0)); KK_GL_ERROR
+                                  (void *) (long) kk::script::toIntArgument(ctx, 5, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -2047,7 +2075,7 @@ namespace kk {
             glViewport(kk::script::toIntArgument(ctx, 0, 0),
                        kk::script::toIntArgument(ctx, 1, 0),
                        kk::script::toUintArgument(ctx, 2, 0),
-                       kk::script::toUintArgument(ctx, 3, 0)); KK_GL_ERROR
+                       kk::script::toUintArgument(ctx, 3, 0)); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -2055,7 +2083,7 @@ namespace kk {
             
             std::vector<kk::String> vs;
             
-            kk::CStringSplit((kk::CString) glGetString(GL_EXTENSIONS), " ", vs); KK_GL_ERROR
+            kk::CStringSplit((kk::CString) glGetString(GL_EXTENSIONS), " ", vs); KK_GL_ERROR(ctx)
             
             duk_push_array(ctx);
             
@@ -2082,7 +2110,7 @@ namespace kk {
             
             std::set<kk::String> vs;
             
-            kk::CStringSplit((kk::CString) glGetString(GL_EXTENSIONS), " ", vs); KK_GL_ERROR
+            kk::CStringSplit((kk::CString) glGetString(GL_EXTENSIONS), " ", vs); KK_GL_ERROR(ctx)
             
             std::set<kk::String>::iterator i = vs.find(kk::script::toStringArgument(ctx, 0, "").c_str());
             

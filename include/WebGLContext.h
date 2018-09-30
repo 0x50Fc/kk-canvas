@@ -27,6 +27,8 @@
 #include <OpenGL/OpenGL.h>
 #include <OpenGL/gl.h>
 #else
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/glext.h>
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #endif
@@ -200,6 +202,8 @@ namespace kk {
             DEF_SCRIPT_METHOD(polygonOffset)
             
             DEF_SCRIPT_METHOD(readPixels)
+            
+            void extracted(duk_context *ctx);
             
             DEF_SCRIPT_METHOD(renderbufferStorage)
             DEF_SCRIPT_METHOD(sampleCoverage)

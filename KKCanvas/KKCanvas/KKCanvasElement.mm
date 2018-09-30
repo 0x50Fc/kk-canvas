@@ -253,6 +253,10 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
 
     _canvas->retain();
     
+//    kk::script::Debugger * debugger = new kk::script::Debugger(9091);
+//    
+//    debugger->debug(_canvas->jsContext()->jsContext());
+//    
     if(path) {
         _canvas->exec("main.js");
     } else {
@@ -308,7 +312,7 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
     
     if(_GLContext != nil) {
         
-        /*
+ 
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE , GL_ONE_MINUS_SRC_ALPHA);
@@ -390,7 +394,6 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
         glDeleteShader(vsh);
         
         glDeleteProgram(program);
-        */
         
         [_GLContext display];
         
