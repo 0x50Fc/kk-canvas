@@ -17,7 +17,7 @@
 
 @property(nonatomic,assign,readonly) GLsizei width;
 @property(nonatomic,assign,readonly) GLsizei height;
-
+@property(nonatomic,assign,readonly) GLuint framebuffer;
 -(void) begin;
 
 -(void) resizeLayer:(CAEAGLLayer *) layer;

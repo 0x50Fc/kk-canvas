@@ -121,9 +121,14 @@ namespace kk {
             int top = duk_get_top(ctx);
             
             kk::CString path = nullptr;
+            kk::CString type = nullptr;
             
             if(top >0 && duk_is_string(ctx, -top)) {
                 path = duk_to_string(ctx, -top);
+            }
+            
+            if(top >1 && duk_is_string(ctx, -top + 1)) {
+                type = duk_to_string(ctx, -top +1);
             }
             
             if(path) {
@@ -146,28 +151,29 @@ namespace kk {
                 
                 if(fd) {
                     
-                    evbuffer * buf = evbuffer_new();
+                    kk::String s;
                     
                     char data[20480];
                     size_t n;
                     
                     while((n = fread(data, 1, sizeof(data), fd)) > 0) {
-                        evbuffer_add(buf, data, n);
+                        s.append(data,0,n);
                     }
-                    
+
                     fclose(fd);
                     
-                    
-                    n = EVBUFFER_LENGTH(buf);
+                    n = s.size();
                     void * v = duk_push_fixed_buffer(ctx, n);
                     
-                    evbuffer_remove(buf, v, n);
+                    memcpy(v, s.data(), n);
                     
-                    evbuffer_free(buf);
-                    
-                    duk_push_buffer_object(ctx, -1, 0, n, DUK_BUFOBJ_UINT8ARRAY);
-                    
-                    duk_remove(ctx, -2);
+                    if(kk::CStringEqual(type, "arraybuffer")) {
+                        duk_push_buffer_object(ctx, -1, 0, n, DUK_BUFOBJ_ARRAYBUFFER);
+                        duk_remove(ctx, -2);
+                    } else {
+                        duk_push_buffer_object(ctx, -1, 0, n, DUK_BUFOBJ_UINT8ARRAY);
+                        duk_remove(ctx, -2);
+                    }
                     
                     return 1;
                     
@@ -287,7 +293,7 @@ namespace kk {
             duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_WRITABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE | DUK_DEFPROP_SET_ENUMERABLE);
             
             duk_push_string(ctx, "getContent");
-            duk_push_c_function(ctx, Canvas_getContent, 1);
+            duk_push_c_function(ctx, Canvas_getContent, 2);
             duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_WRITABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE | DUK_DEFPROP_SET_ENUMERABLE);
             
             duk_push_string(ctx, "compile");
@@ -503,6 +509,7 @@ namespace kk {
             
             duk_pop(ctx);
             
+            duk_gc(ctx, DUK_GC_COMPACT);
         }
     }
     

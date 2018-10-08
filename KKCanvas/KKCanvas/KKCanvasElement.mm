@@ -34,21 +34,59 @@
 
 @end
 
+dispatch_queue_t KKCanvasQueue(void) {
+    static dispatch_queue_t v = nil;
+    if(v == nullptr) {
+        v = dispatch_queue_create("KKCanvasDispatchQueue", DISPATCH_QUEUE_SERIAL);
+    }
+    return v;
+}
+
 evdns_base * KKCanvasEventDNS() {
     static evdns_base * v = nullptr;
     if(v == nullptr) {
-        evdns_base_new(KKCanvasDispatchQueue()->base(), 0);
+        evdns_base_new(KKCanvasDispatchQueue()->base(), EVDNS_BASE_INITIALIZE_NAMESERVERS);
     }
     return v;
 }
 
 kk::DispatchQueue * KKCanvasDispatchQueue() {
+    
     static kk::DispatchQueue * v = nullptr;
+    static event_base * base = nullptr;
+    static dispatch_source_t source = nil;
+    
     if(v == nullptr) {
-        v = new kk::DispatchQueue("KKCanvasDispatchQueue");
+        base = event_base_new();
+        v = new kk::DispatchQueue("KKCanvasDispatchQueue",base);
         v->retain();
+        
+        dispatch_async(KKCanvasQueue(), ^{
+            [[NSThread currentThread] setName:@"KKCanvasDispatchQueue"];
+            kk::DispatchQueue::setCurrent(v);
+        });
+        
+        source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,KKCanvasQueue());
+        
+        dispatch_source_set_timer(source, dispatch_walltime(NULL, 0), (int64_t)(NSEC_PER_SEC / 60), 0);
+        
+        dispatch_source_set_event_handler(source, ^{
+           event_base_loop(base, EVLOOP_ONCE | EVLOOP_NONBLOCK);
+        });
+        
+        dispatch_resume(source);
+        
     }
+    
     return v;
+}
+
+static void KKCanvasElement_ObjectRelease(CFTypeRef object) {
+    @autoreleasepool {
+        if(object != nil){
+            CFRelease(object);
+        }
+    }
 }
 
 static void KKCanvasElement_Recycle(kk::DispatchQueue * queue,BK_DEF_ARG) {
@@ -57,14 +95,18 @@ static void KKCanvasElement_Recycle(kk::DispatchQueue * queue,BK_DEF_ARG) {
     BK_GET_VAR(GLContext, CFTypeRef)
     
     if(GLContext != nil) {
-        [EAGLContext setCurrentContext:(__bridge EAGLContext *) GLContext];
+        @autoreleasepool {
+            [EAGLContext setCurrentContext:(__bridge EAGLContext *) GLContext];
+        }
     }
     
     canvas->release();
     
     if(GLContext != nil) {
-        [(__bridge KKCanvasGLContext *) GLContext recycle];
-        [EAGLContext setCurrentContext:nil];
+        @autoreleasepool {
+            [(__bridge KKCanvasGLContext *) GLContext recycle];
+            [EAGLContext setCurrentContext:nil];
+        }
     }
     
 }
@@ -85,10 +127,10 @@ static void KKCanvasElement_Recycle(kk::DispatchQueue * queue,BK_DEF_ARG) {
         
         BK_CTX
         
-        BK_RETAIN(canvas, _canvas)
+        BK_WEAK(canvas, _canvas)
         
         if(_GLContext != nil) {
-            BK_PTR(GLContext, CFBridgingRetain(_GLContext), CFRelease);
+            BK_PTR(GLContext, CFBridgingRetain(_GLContext), KKCanvasElement_ObjectRelease);
         }
         
         KKCanvasDispatchQueue()->async(KKCanvasElement_Recycle, BK_ARG);
@@ -201,6 +243,8 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
                 
                 [EAGLContext setCurrentContext:[e GLContext]];
 
+                v->setFramebuffer([[e GLContext] framebuffer]);
+                
                 [[e GLContext] begin];
                 
             }
@@ -253,10 +297,10 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
 
     _canvas->retain();
     
-//    kk::script::Debugger * debugger = new kk::script::Debugger(9091);
-//    
-//    debugger->debug(_canvas->jsContext()->jsContext());
-//    
+    kk::script::Debugger * debugger = new kk::script::Debugger(9091);
+    
+    debugger->debug(_canvas->jsContext()->jsContext());
+    
     if(path) {
         _canvas->exec("main.js");
     } else {
@@ -273,10 +317,10 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
         
         BK_CTX
         
-        BK_RETAIN(canvas, _canvas)
+        BK_WEAK(canvas, _canvas)
         
         if(_GLContext != nil) {
-            BK_PTR(GLContext, CFBridgingRetain(_GLContext), CFRelease);
+            BK_PTR(GLContext, CFBridgingRetain(_GLContext), KKCanvasElement_ObjectRelease);
             _GLContext = nil;
         }
         
@@ -401,6 +445,8 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
         */
         
         [_GLContext display];
+        
+        [EAGLContext setCurrentContext:nil];
         
     }
     

@@ -11,10 +11,18 @@
 #import <KKEvent/KKEvent.h>
 
 #ifdef __cplusplus
-
 kk::DispatchQueue * KKCanvasDispatchQueue(void);
 evdns_base * KKCanvasEventDNS(void);
+#endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
+    dispatch_queue_t KKCanvasQueue(void);
+
+#ifdef __cplusplus
+}
 #endif
 
 @interface KKCanvasElement : KKViewElement

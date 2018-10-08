@@ -34,7 +34,7 @@ namespace kk {
             return _value;
         }
         
-        Context::Context(Uint width,Uint height):_width(width),_height(height) {
+        Context::Context(Uint width,Uint height):_width(width),_height(height),_framebuffer(0) {
             
         }
         
@@ -49,6 +49,14 @@ namespace kk {
         
         Uint Context::height() {
             return _height;
+        }
+        
+        Uint Context::framebuffer() {
+            return _framebuffer;
+        }
+        
+        void Context::setFramebuffer(Uint v) {
+            _framebuffer = v;
         }
         
     }

@@ -27,8 +27,6 @@
 #include <OpenGL/OpenGL.h>
 #include <OpenGL/gl.h>
 #else
-#include <OpenGLES/ES1/gl.h>
-#include <OpenGLES/ES1/glext.h>
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #endif
@@ -268,10 +266,12 @@ namespace kk {
             
             virtual Uint width();
             virtual Uint height();
-            
+            virtual Uint framebuffer();
+            virtual void setFramebuffer(Uint v);
         protected:
             Uint _width;
             Uint _height;
+            Uint _framebuffer;
             
         };
         
