@@ -1,0 +1,9 @@
+/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/kk-canvas.dir
+/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/debug/armeabi-v7a/kk-object/CMakeFiles/edit_cache.dir
+/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/debug/armeabi-v7a/kk-object/CMakeFiles/rebuild_cache.dir
+/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/debug/armeabi-v7a/kk-object/CMakeFiles/kk-object.dir
+/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/debug/armeabi-v7a/kk-element/CMakeFiles/edit_cache.dir
+/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/debug/armeabi-v7a/kk-element/CMakeFiles/rebuild_cache.dir
+/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/debug/armeabi-v7a/kk-element/CMakeFiles/kk-element.dir

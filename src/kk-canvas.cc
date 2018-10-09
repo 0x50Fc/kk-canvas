@@ -13,6 +13,18 @@
 #include "CGContext.h"
 #include "WebGLContext.h"
 
+#if defined(KK_PLATFORM_IOS)
+
+#else
+
+#include "kk-crypto.h"
+#include "kk-ws.h"
+#include "kk-http.h"
+#include "kk-wk.h"
+#include "kk-ev.h"
+
+#endif
+
 #define Kernel 1.0
 
 namespace kk {
@@ -147,31 +159,33 @@ namespace kk {
                 
                 p.append(path);
                 
-                FILE * fd = fopen(p.c_str(), "r");
+                struct stat st;
+                
+                if(-1 == stat(p.c_str(), &st)) {
+                    kk::Log("Not Open %s",p.c_str());
+                    return 0;
+                }
+                
+                FILE * fd = fopen(p.c_str(), "rb");
                 
                 if(fd) {
                     
-                    kk::String s;
-                    
-                    char data[20480];
-                    size_t n;
-                    
-                    while((n = fread(data, 1, sizeof(data), fd)) > 0) {
-                        s.append(data,0,n);
+                    void * data = duk_push_fixed_buffer(ctx, st.st_size);
+                   
+                    if(fread(data, 1, st.st_size, fd) != st.st_size) {
+                        kk::Log("File Read Error %s",p.c_str());
+                        fclose(fd);
+                        duk_pop(ctx);
+                        return 0;
                     }
-
+                    
                     fclose(fd);
                     
-                    n = s.size();
-                    void * v = duk_push_fixed_buffer(ctx, n);
-                    
-                    memcpy(v, s.data(), n);
-                    
                     if(kk::CStringEqual(type, "arraybuffer")) {
-                        duk_push_buffer_object(ctx, -1, 0, n, DUK_BUFOBJ_ARRAYBUFFER);
+                        duk_push_buffer_object(ctx, -1, 0, st.st_size, DUK_BUFOBJ_ARRAYBUFFER);
                         duk_remove(ctx, -2);
                     } else {
-                        duk_push_buffer_object(ctx, -1, 0, n, DUK_BUFOBJ_UINT8ARRAY);
+                        duk_push_buffer_object(ctx, -1, 0, st.st_size, DUK_BUFOBJ_UINT8ARRAY);
                         duk_remove(ctx, -2);
                     }
                     
@@ -359,6 +373,28 @@ namespace kk {
         return 0;
     }
     
+    static duk_ret_t Canvas_display_func(duk_context * ctx) {
+        
+        Canvas * object = nullptr;
+        
+        duk_push_this(ctx);
+        
+        duk_get_prop_string(ctx, -1, "__object");
+        
+        if(duk_is_pointer(ctx, -1)) {
+            object = (Canvas *) duk_to_pointer(ctx, -1);
+        }
+        
+        duk_pop_2(ctx);
+        
+        if(object) {
+            object->setNeedsDisplay();
+        }
+        
+        return 0;
+    }
+
+    
     Canvas::Canvas(kk::DispatchQueue * queue,
                    evdns_base * dns,
                    kk::CString basePath,
@@ -367,7 +403,8 @@ namespace kk {
                    Uint height):
     _queue(queue),_basePath(basePath),_userdata(userdata),
     _draw(cb->draw),_getContext(cb->getContext),
-    _width(width),_height(height){
+    _width(width),_height(height),
+    _displaying(false){
         
         _jsContext = new kk::script::Context();
         
@@ -383,19 +420,27 @@ namespace kk {
         {
             duk_push_object(ctx);
             
-            duk_push_string(ctx, "__object");
-            duk_push_pointer(ctx, this);
-            duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_ENUMERABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE|DUK_DEFPROP_CLEAR_WRITABLE);
-            
-            duk_push_string(ctx, "emit");
-            duk_push_c_function(ctx, Canvas_emit_func, 0);
-                duk_push_string(ctx, "__func");
-                duk_push_pointer(ctx, (void *) cb->emit);
+            {
+                duk_push_string(ctx, "__object");
+                duk_push_pointer(ctx, this);
                 duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_ENUMERABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE|DUK_DEFPROP_CLEAR_WRITABLE);
-            duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_ENUMERABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE|DUK_DEFPROP_CLEAR_WRITABLE);
-            
-            if(kk::script::GetPrototype(ctx, &Canvas::ScriptClass)) {
-                duk_set_prototype(ctx, -2);
+                
+                duk_push_string(ctx, "emit");
+                duk_push_c_function(ctx, Canvas_emit_func, 0);
+                {
+                    duk_push_string(ctx, "__func");
+                    duk_push_pointer(ctx, (void *) cb->emit);
+                    duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_ENUMERABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE|DUK_DEFPROP_CLEAR_WRITABLE);
+                }
+                duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_ENUMERABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE|DUK_DEFPROP_CLEAR_WRITABLE);
+                
+                duk_push_string(ctx, "display");
+                duk_push_c_function(ctx, Canvas_display_func, 0);
+                duk_def_prop(ctx, -3, DUK_DEFPROP_HAVE_VALUE | DUK_DEFPROP_CLEAR_ENUMERABLE | DUK_DEFPROP_CLEAR_CONFIGURABLE|DUK_DEFPROP_CLEAR_WRITABLE);
+                
+                if(kk::script::GetPrototype(ctx, &Canvas::ScriptClass)) {
+                    duk_set_prototype(ctx, -2);
+                }
             }
             
             duk_put_global_string(ctx, "canvas");
@@ -638,15 +683,23 @@ namespace kk {
     static void Canvas_drawDispatchFunc(DispatchQueue * queue,BK_DEF_ARG) {
         
         BK_GET_STRONG(canvas)
-        BK_GET_VAR(draw,CanvasDrawFunc)
         
         Canvas * v = canvas.as<Canvas>();
         
-        if(v && draw) {
-            kk::Strong vv = v->CGContext();
-            if(vv.get() != nullptr) {
-                (*draw)(v,vv.get());
-            }
+        if(v) {
+            v->display();
+        }
+        
+    }
+    
+    void Canvas::display() {
+        
+        _displaying = false;
+        
+        kk::Strong vv = CGContext();
+        
+        if(_draw != nullptr && vv.get() != nullptr) {
+            (*_draw)(this,vv.get());
         }
         
     }
@@ -659,6 +712,21 @@ namespace kk {
         return _height;
     }
     
+    void Canvas::setNeedsDisplay() {
+        
+        if(!_displaying) {
+            
+            BK_CTX
+            
+            BK_WEAK(canvas, this)
+            
+            _queue.as<kk::DispatchQueue>()->async(Canvas_drawDispatchFunc, BK_ARG);
+            
+            _displaying = true;
+        }
+        
+    }
+    
     duk_ret_t Canvas::duk_getContext(duk_context *ctx) {
         
         kk::String name;
@@ -669,15 +737,7 @@ namespace kk {
             name = kk::script::toString(ctx, -top);
         }
         
-        {
-            BK_CTX
-            
-            BK_WEAK(canvas, this)
-            BK_PTR(draw, _draw, NULL)
-            
-            _queue.as<kk::DispatchQueue>()->async(Canvas_drawDispatchFunc, BK_ARG);
-            
-        }
+        setNeedsDisplay();
         
         if(name == "2d") {
             

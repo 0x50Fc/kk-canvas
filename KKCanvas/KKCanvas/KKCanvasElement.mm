@@ -167,6 +167,7 @@ static void KKCanvasElement_CanvasDrawFunc(kk::Canvas * canvas,kk::Object * CGCo
                 @autoreleasepool {
                      [e displayGLContext:v];
                 }
+                v->end();
                 return;
             }
         }
@@ -234,6 +235,8 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
             
             @autoreleasepool {
                 
+                [EAGLContext setCurrentContext:[e GLContext]];
+                
                 if(v->width() != canvas->width() || v->height() != canvas->height()) {
                     dispatch_sync(dispatch_get_main_queue(), ^{
                         [e resizeGLContext];
@@ -241,9 +244,8 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
                     v->setSize(canvas->width(), canvas->height());
                 }
                 
-                [EAGLContext setCurrentContext:[e GLContext]];
-
                 v->setFramebuffer([[e GLContext] framebuffer]);
+                v->begin();
                 
                 [[e GLContext] begin];
                 
@@ -297,10 +299,10 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
 
     _canvas->retain();
     
-    kk::script::Debugger * debugger = new kk::script::Debugger(9091);
-    
-    debugger->debug(_canvas->jsContext()->jsContext());
-    
+//    kk::script::Debugger * debugger = new kk::script::Debugger(9091);
+//    
+//    debugger->debug(_canvas->jsContext()->jsContext());
+//    
     if(path) {
         _canvas->exec("main.js");
     } else {

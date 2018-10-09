@@ -19,7 +19,6 @@
         GLuint frame;
         GLuint color;
         GLuint depth;
-        GLuint vao;
     } _data;
     CGSize _resize;
 }
@@ -37,7 +36,6 @@
         glGenFramebuffers(1, &_data.frame); KK_GL_ERROR(glGenFramebuffers)
         glGenRenderbuffers(1, &_data.color); KK_GL_ERROR(glGenRenderbuffers)
         glGenRenderbuffers(1, &_data.depth); KK_GL_ERROR(glGenRenderbuffers)
-        glGenVertexArraysOES(1, &_data.vao); KK_GL_ERROR(glGenVertexArraysOES)
         
         [EAGLContext setCurrentContext:nil];
         
@@ -58,7 +56,6 @@
     glDeleteFramebuffers(1,&_data.frame); KK_GL_ERROR(glDeleteFramebuffers)
     glDeleteRenderbuffers(1,&_data.color); KK_GL_ERROR(glDeleteRenderbuffers)
     glDeleteRenderbuffers(1,&_data.depth); KK_GL_ERROR(glDeleteRenderbuffers)
-    glDeleteVertexArraysOES(1, &_data.vao); KK_GL_ERROR(glDeleteVertexArraysOES)
     
 }
 
@@ -66,7 +63,6 @@
 //    NSLog(@"[KK] [WebGL] >>>>>>>>>>");
     glBindFramebuffer(GL_FRAMEBUFFER, _data.frame); KK_GL_ERROR(glBindFramebuffer)
     glBindRenderbuffer(GL_RENDERBUFFER, _data.color); KK_GL_ERROR(glBindRenderbuffer)
-    glBindVertexArrayOES(_data.vao); KK_GL_ERROR(glBindVertexArrayOES)
 }
 
 -(void) resizeLayer:(CAEAGLLayer *) layer {
@@ -104,8 +100,6 @@
 //    glHint(GL_LINE_SMOOTH_HINT,GL_NICEST); KK_GL_ERROR(glHint GL_LINE_SMOOTH_HINT)
     
     glViewport(0, 0, _width, _height); KK_GL_ERROR(glViewport)
-    
-    glBindVertexArrayOES(_data.vao); KK_GL_ERROR(glBindVertexArrayOES)
     
 }
 

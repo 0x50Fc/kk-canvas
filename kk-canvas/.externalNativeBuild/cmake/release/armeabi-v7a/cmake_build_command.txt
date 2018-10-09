@@ -1,0 +1,16 @@
+Executable : /Users/hailong11/Library/Android/sdk/cmake/3.6.4111459/bin/cmake
+arguments : 
+-H/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas
+-B/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a
+-GAndroid Gradle - Ninja
+-DANDROID_ABI=armeabi-v7a
+-DANDROID_NDK=/Users/hailong11/Library/Android/sdk/ndk-bundle
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/build/intermediates/cmake/release/obj/armeabi-v7a
+-DCMAKE_BUILD_TYPE=Release
+-DCMAKE_MAKE_PROGRAM=/Users/hailong11/Library/Android/sdk/cmake/3.6.4111459/bin/ninja
+-DCMAKE_TOOLCHAIN_FILE=/Users/hailong11/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake
+-DANDROID_PLATFORM=android-18
+-DCMAKE_C_FLAGS=-DHAVE_CONFIG_H -DNDEBUG
+-DCMAKE_CXX_FLAGS=-DDEBUG
+jvmArgs : 
+

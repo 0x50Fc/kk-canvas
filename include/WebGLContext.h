@@ -17,6 +17,8 @@
 #else
 
 #include "kk-object.h"
+#include "kk-script.h"
+#include "kk-string.h"
 
 #endif
 
@@ -37,6 +39,11 @@
 #include <EGL/eglext.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+
+extern GLvoid glBindVertexArrayOES(GLuint array);
+extern GLvoid glDeleteVertexArraysOES(GLsizei n, const GLuint *arrays);
+extern GLvoid glGenVertexArraysOES(GLsizei n, GLuint *arrays);
+
 
 #endif
 
@@ -88,6 +95,8 @@ namespace kk {
         public:
             
             Context(Uint width,Uint height);
+            
+            virtual ~Context();
             
             DEF_SCRIPT_CLASS_NOALLOC
             
@@ -268,11 +277,13 @@ namespace kk {
             virtual Uint height();
             virtual Uint framebuffer();
             virtual void setFramebuffer(Uint v);
+            virtual void begin();
+            virtual void end();
         protected:
             Uint _width;
             Uint _height;
             Uint _framebuffer;
-            
+            GLuint _vao;
         };
         
     }

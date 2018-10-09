@@ -18,6 +18,8 @@
 #else
 
 #include "kk-object.h"
+#include "kk-script.h"
+#include "kk-string.h"
 
 #endif
 
@@ -27,6 +29,9 @@ namespace kk {
     
 #if defined(KK_PLATFORM_IOS)
         typedef CGFloat Float;
+#if defined(__LP64__) && __LP64__
+#define KK_CG_FLOAT64
+#endif
 #else
         typedef float Float;
 #endif

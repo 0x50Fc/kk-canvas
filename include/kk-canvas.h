@@ -17,6 +17,8 @@
 
 #include "kk-object.h"
 #include "kk-script.h"
+#include "kk-string.h"
+#include "kk-dispatch.h"
 
 #endif
 
@@ -67,7 +69,12 @@ namespace kk {
         virtual Uint width();
         virtual Uint height();
         
+        virtual void setNeedsDisplay();
+        
+        virtual void display();
+        
     protected:
+
         kk::String _basePath;
         kk::Strong _queue;
         kk::Strong _jsContext;
@@ -77,6 +84,7 @@ namespace kk {
         CanvasGetContextFunc _getContext;
         Uint _width;
         Uint _height;
+        kk::Boolean _displaying;
     };
     
 }

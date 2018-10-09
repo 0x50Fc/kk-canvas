@@ -1,0 +1,252 @@
+
+{
+	"buildFiles" : 
+	[
+		"/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/CMakeLists.txt",
+		"/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/CMakeLists.txt",
+		"/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-element/CMakeLists.txt"
+	],
+	"cFileExtensions" : [ "c" ],
+	"cleanCommands" : 
+	[
+		"/Users/hailong11/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a --target clean"
+	],
+	"cppFileExtensions" : [ "cc" ],
+	"libraries" : 
+	{
+		"duktape-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "duktape",
+			"buildType" : "release",
+			"output" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/lib/armeabi-v7a/libduktape.so",
+			"toolchain" : "6018376074395522180"
+		},
+		"event-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "event",
+			"buildType" : "release",
+			"output" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/lib/armeabi-v7a/libevent.so",
+			"toolchain" : "6018376074395522180"
+		},
+		"kk-canvas-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "kk-canvas",
+			"buildCommand" : "/Users/hailong11/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a --target kk-canvas",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot -Dkk_canvas_EXPORTS -I../../../../src/main/jni/include -I../../../../src/main/jni/js -I../../../../src/main/jni/duktape -I../../../../src/main/jni/md5 -I../../../../src/main/jni -I../../../../src/main/jni/libevent/include -I../../../../src/main/jni/kk-object/include -I../../../../src/main/jni/kk-element/include  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -DHAVE_CONFIG_H -DNDEBUG -Os -DNDEBUG  -fPIC      -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/src/main/jni/kk.c",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot  -Dkk_canvas_EXPORTS -I../../../../src/main/jni/include -I../../../../src/main/jni/js -I../../../../src/main/jni/duktape -I../../../../src/main/jni/md5 -I../../../../src/main/jni -I../../../../src/main/jni/libevent/include -I../../../../src/main/jni/kk-object/include -I../../../../src/main/jni/kk-element/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/src/main/jni/src/kk-canvas.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot  -Dkk_canvas_EXPORTS -I../../../../src/main/jni/include -I../../../../src/main/jni/js -I../../../../src/main/jni/duktape -I../../../../src/main/jni/md5 -I../../../../src/main/jni -I../../../../src/main/jni/libevent/include -I../../../../src/main/jni/kk-object/include -I../../../../src/main/jni/kk-element/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/src/main/jni/src/CGContext.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot  -Dkk_canvas_EXPORTS -I../../../../src/main/jni/include -I../../../../src/main/jni/js -I../../../../src/main/jni/duktape -I../../../../src/main/jni/md5 -I../../../../src/main/jni -I../../../../src/main/jni/libevent/include -I../../../../src/main/jni/kk-object/include -I../../../../src/main/jni/kk-element/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/src/main/jni/src/CGContextJS.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot  -Dkk_canvas_EXPORTS -I../../../../src/main/jni/include -I../../../../src/main/jni/js -I../../../../src/main/jni/duktape -I../../../../src/main/jni/md5 -I../../../../src/main/jni -I../../../../src/main/jni/libevent/include -I../../../../src/main/jni/kk-object/include -I../../../../src/main/jni/kk-element/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/src/main/jni/src/WebGLContext.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot  -Dkk_canvas_EXPORTS -I../../../../src/main/jni/include -I../../../../src/main/jni/js -I../../../../src/main/jni/duktape -I../../../../src/main/jni/md5 -I../../../../src/main/jni -I../../../../src/main/jni/libevent/include -I../../../../src/main/jni/kk-object/include -I../../../../src/main/jni/kk-element/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/src/main/jni/src/WebGLContextJS.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot  -Dkk_canvas_EXPORTS -I../../../../src/main/jni/include -I../../../../src/main/jni/js -I../../../../src/main/jni/duktape -I../../../../src/main/jni/md5 -I../../../../src/main/jni -I../../../../src/main/jni/libevent/include -I../../../../src/main/jni/kk-object/include -I../../../../src/main/jni/kk-element/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/src/main/jni/CGContext.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot  -Dkk_canvas_EXPORTS -I../../../../src/main/jni/include -I../../../../src/main/jni/js -I../../../../src/main/jni/duktape -I../../../../src/main/jni/md5 -I../../../../src/main/jni -I../../../../src/main/jni/libevent/include -I../../../../src/main/jni/kk-object/include -I../../../../src/main/jni/kk-element/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/src/main/jni/CGImage.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot  -Dkk_canvas_EXPORTS -I../../../../src/main/jni/include -I../../../../src/main/jni/js -I../../../../src/main/jni/duktape -I../../../../src/main/jni/md5 -I../../../../src/main/jni -I../../../../src/main/jni/libevent/include -I../../../../src/main/jni/kk-object/include -I../../../../src/main/jni/kk-element/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/src/main/jni/kk-canvas.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/build/intermediates/cmake/release/obj/armeabi-v7a/libkk-canvas.so",
+			"toolchain" : "6018376074395522180"
+		},
+		"kk-element-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "kk-element",
+			"buildCommand" : "/Users/hailong11/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a --target kk-element",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-element/./include -I../../../../kk-element/../kk-duktape/include -I../../../../kk-element/../kk-event/include -I../../../../kk-element/../kk-object/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-element/src/kk-document.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-element/./include -I../../../../kk-element/../kk-duktape/include -I../../../../kk-element/../kk-event/include -I../../../../kk-element/../kk-object/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-element/src/kk-element.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-element/./include -I../../../../kk-element/../kk-duktape/include -I../../../../kk-element/../kk-event/include -I../../../../kk-element/../kk-object/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-element/src/kk-element-style.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-element/./include -I../../../../kk-element/../kk-duktape/include -I../../../../kk-element/../kk-event/include -I../../../../kk-element/../kk-object/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-element/src/kk-document-binary.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a/kk-element/libkk-element.a",
+			"toolchain" : "6018376074395522180"
+		},
+		"kk-object-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "kk-object",
+			"buildCommand" : "/Users/hailong11/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a --target kk-object",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-object.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-script.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-string.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-binary.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-bio.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-block.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-chan.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-crypto.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-dispatch.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-ev.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-event.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-http.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-wk.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-ws.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot   -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5 -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -DDEBUG -Os -DNDEBUG  -fPIC   -std=gnu++11  -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/src/kk-atomic-pthread.cc",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot  -I../../../../kk-object/./include -I../../../../kk-object/../kk-duktape/include -I../../../../kk-object/../kk-event/include -I../../../../kk-object/lib/md5  -isystem /Users/hailong11/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=18 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -DHAVE_CONFIG_H -DNDEBUG -Os -DNDEBUG  -fPIC      -c ",
+					"src" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/kk-object/lib/md5/md5.c",
+					"workingDirectory" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "/Users/hailong11/Documents/src/github.com/hailongz/kk-canvas/kk-canvas/.externalNativeBuild/cmake/release/armeabi-v7a/kk-object/libkk-object.a",
+			"toolchain" : "6018376074395522180"
+		}
+	},
+	"toolchains" : 
+	{
+		"6018376074395522180" : 
+		{
+			"cCompilerExecutable" : "/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/Users/hailong11/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+		}
+	}
+}

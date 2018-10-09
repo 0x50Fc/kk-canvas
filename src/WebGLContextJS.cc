@@ -13,6 +13,12 @@
 #define GL_DEPTH_STENCIL 0x84F9
 #define GL_DEPTH_STENCIL_ATTACHMENT 0x821A
 
+#define GL_UNPACK_FLIP_Y_WEBGL                  0x9240
+#define GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL       0x9241
+#define GL_CONTEXT_LOST_WEBGL                   0x9242
+#define GL_UNPACK_COLORSPACE_CONVERSION_WEBGL   0x9243
+#define GL_BROWSER_DEFAULT_WEBGL                0x9244
+
 namespace kk {
     
     
@@ -446,11 +452,11 @@ namespace kk {
         IMP_SCRIPT_CONST_UINT(INVALID_FRAMEBUFFER_OPERATION  , GL_INVALID_FRAMEBUFFER_OPERATION)
         
         /* WebGL-specific enums */
-        IMP_SCRIPT_CONST_UINT(UNPACK_FLIP_Y_WEBGL            , 0x9240)
-        IMP_SCRIPT_CONST_UINT(UNPACK_PREMULTIPLY_ALPHA_WEBGL , 0x9241)
-        IMP_SCRIPT_CONST_UINT(CONTEXT_LOST_WEBGL             , 0x9242)
-        IMP_SCRIPT_CONST_UINT(UNPACK_COLORSPACE_CONVERSION_WEBGL , 0x9243)
-        IMP_SCRIPT_CONST_UINT(BROWSER_DEFAULT_WEBGL          , 0x9244)
+        IMP_SCRIPT_CONST_UINT(UNPACK_FLIP_Y_WEBGL            , GL_UNPACK_FLIP_Y_WEBGL)
+        IMP_SCRIPT_CONST_UINT(UNPACK_PREMULTIPLY_ALPHA_WEBGL , GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL)
+        IMP_SCRIPT_CONST_UINT(CONTEXT_LOST_WEBGL             , GL_CONTEXT_LOST_WEBGL)
+        IMP_SCRIPT_CONST_UINT(UNPACK_COLORSPACE_CONVERSION_WEBGL , GL_UNPACK_COLORSPACE_CONVERSION_WEBGL)
+        IMP_SCRIPT_CONST_UINT(BROWSER_DEFAULT_WEBGL          , GL_BROWSER_DEFAULT_WEBGL)
         
         
         static kk::script::Property propertys[] = {
@@ -1253,7 +1259,7 @@ namespace kk {
             {
                 kk::CString v = (kk::CString) glGetString(name);
                 
-                if(v != nullptr && glGetError() == 0) {
+                if(glGetError() == 0 && v != nullptr) {
                     duk_push_string(ctx, v);
                     return 1;
                 }
@@ -1368,17 +1374,17 @@ namespace kk {
         duk_ret_t Context::duk_getShaderPrecisionFormat(duk_context * ctx) {
             GLenum shadertype = kk::script::toUintArgument(ctx, 0, 0);
             GLenum precisiontype = kk::script::toUintArgument(ctx, 1, 0);
-            GLint range = 0;
+            GLint range[2] = {0,0};
             GLint precision = 0;
             glGetShaderPrecisionFormat(shadertype,
                                        precisiontype,
-                                       &range,
+                                       range,
                                        &precision); KK_GL_ERROR(ctx)
             duk_push_object(ctx);
-            duk_push_int(ctx, range);
+            duk_push_int(ctx, range[0]);
             duk_put_prop_string(ctx, -2, "rangeMin");
             
-            duk_push_int(ctx, range);
+            duk_push_int(ctx, range[1]);
             duk_put_prop_string(ctx, -2, "rangeMax");
             
             duk_push_int(ctx, precision);
@@ -1538,8 +1544,12 @@ namespace kk {
         }
         
         duk_ret_t Context::duk_pixelStorei(duk_context * ctx) {
-            glPixelStorei(kk::script::toUintArgument(ctx, 0, 0),
-                          kk::script::toIntArgument(ctx, 1, 0)); KK_GL_ERROR(ctx)
+            GLenum pname = kk::script::toUintArgument(ctx, 0, 0);
+            GLint param = kk::script::toIntArgument(ctx, 1, 0);
+            if(pname >= GL_UNPACK_FLIP_Y_WEBGL && pname <= GL_BROWSER_DEFAULT_WEBGL) {
+                return 0;
+            }
+            glPixelStorei(pname,param); KK_GL_ERROR(ctx)
             return 0;
         }
         
@@ -1786,6 +1796,9 @@ namespace kk {
             size_t n;
             GLint location = kk::script::toIntArgument(ctx, 0, 0);
             void * data = kk::script::toBufferDataArgument(ctx, 1, &n);
+            if(data == nullptr) {
+                return 0;
+            }
             glUniform1fv(location,(GLsizei) (n / sizeof(GLfloat)),(GLfloat *) data); KK_GL_ERROR(ctx)
             return 0;
         }
@@ -1800,6 +1813,9 @@ namespace kk {
             size_t n;
             GLint location = kk::script::toIntArgument(ctx, 0, 0);
             void * data = kk::script::toBufferDataArgument(ctx, 1, &n);
+            if(data == nullptr) {
+                return 0;
+            }
             glUniform1iv(location,(GLsizei) (n / sizeof(GLint)),(GLint *) data); KK_GL_ERROR(ctx)
             return 0;
         }
@@ -1813,6 +1829,9 @@ namespace kk {
             size_t n;
             GLint location = kk::script::toIntArgument(ctx, 0, 0);
             void * data = kk::script::toBufferDataArgument(ctx, 1, &n);
+            if(data == nullptr) {
+                return 0;
+            }
             glUniform2fv(location,(GLsizei) (n / sizeof(GLfloat) / 2),(GLfloat *) data); KK_GL_ERROR(ctx)
             return 0;
         }
@@ -1826,6 +1845,9 @@ namespace kk {
             size_t n;
             GLint location = kk::script::toIntArgument(ctx, 0, 0);
             void * data = kk::script::toBufferDataArgument(ctx, 1, &n);
+            if(data == nullptr) {
+                return 0;
+            }
             glUniform2iv(location,(GLsizei) (n / sizeof(GLint) / 2),(GLint *) data); KK_GL_ERROR(ctx)
             return 0;
         }
@@ -1840,6 +1862,9 @@ namespace kk {
             size_t n;
             GLint location = kk::script::toIntArgument(ctx, 0, 0);
             void * data = kk::script::toBufferDataArgument(ctx, 1, &n);
+            if(data == nullptr) {
+                return 0;
+            }
             glUniform3fv(location,(GLsizei) (n / sizeof(GLfloat) / 3),(GLfloat *) data); KK_GL_ERROR(ctx)
             return 0;
         }
@@ -1854,6 +1879,9 @@ namespace kk {
             size_t n;
             GLint location = kk::script::toIntArgument(ctx, 0, 0);
             void * data = kk::script::toBufferDataArgument(ctx, 1, &n);
+            if(data == nullptr) {
+                return 0;
+            }
             glUniform3iv(location,(GLsizei) (n / sizeof(GLint) / 3),(GLint *) data); KK_GL_ERROR(ctx)
             return 0;
         }
@@ -1869,6 +1897,9 @@ namespace kk {
             size_t n;
             GLint location = kk::script::toIntArgument(ctx, 0, 0);
             void * data = kk::script::toBufferDataArgument(ctx, 1, &n);
+            if(data == nullptr) {
+                return 0;
+            }
             glUniform4fv(location,(GLsizei) (n / sizeof(GLfloat) / 4),(GLfloat *) data); KK_GL_ERROR(ctx)
             return 0;
         }
@@ -1884,6 +1915,9 @@ namespace kk {
             size_t n;
             GLint location = kk::script::toIntArgument(ctx, 0, 0);
             void * data = kk::script::toBufferDataArgument(ctx, 1, &n);
+            if(data == nullptr) {
+                return 0;
+            }
             glUniform4iv(location,(GLsizei) (n / sizeof(GLint) / 4),(GLint *) data); KK_GL_ERROR(ctx)
             return 0;
         }
@@ -1893,6 +1927,9 @@ namespace kk {
             GLint location = kk::script::toIntArgument(ctx, 0, 0);
             GLboolean transpose = kk::script::toBooleanArgument(ctx, 1, 0);
             void * data = kk::script::toBufferDataArgument(ctx, 2, &n);
+            if(data == nullptr) {
+                return 0;
+            }
             glUniformMatrix2fv(location,(GLsizei) (n / sizeof(GLfloat) / 4),transpose,(GLfloat *) data); KK_GL_ERROR(ctx)
             return 0;
         }
@@ -1901,6 +1938,9 @@ namespace kk {
             GLint location = kk::script::toIntArgument(ctx, 0, 0);
             GLboolean transpose = kk::script::toBooleanArgument(ctx, 1, 0);
             void * data = kk::script::toBufferDataArgument(ctx, 2, &n);
+            if(data == nullptr) {
+                return 0;
+            }
             glUniformMatrix3fv(location,(GLsizei) (n / sizeof(GLfloat) / 9),transpose,(GLfloat *) data); KK_GL_ERROR(ctx)
             return 0;
         }
@@ -1909,6 +1949,9 @@ namespace kk {
             GLint location = kk::script::toIntArgument(ctx, 0, 0);
             GLboolean transpose = kk::script::toBooleanArgument(ctx, 1, 0);
             void * data = kk::script::toBufferDataArgument(ctx, 2, &n);
+            if(data == nullptr) {
+                return 0;
+            }
             glUniformMatrix4fv(location,(GLsizei) (n / sizeof(GLfloat) / 16),transpose,(GLfloat *) data); KK_GL_ERROR(ctx)
             return 0;
         }
@@ -2023,7 +2066,7 @@ namespace kk {
                 kk::String& v = * p;
                 
                 if(!v.empty()) {
-                    duk_push_string(ctx, v.c_str());
+                    duk_push_string(ctx, v.substr(3).c_str());
                     duk_put_prop_index(ctx, -2, i);
                 }
                 
@@ -2039,10 +2082,15 @@ namespace kk {
             
             kk::CStringSplit((kk::CString) glGetString(GL_EXTENSIONS), " ", vs); KK_GL_ERROR(ctx)
             
-            std::set<kk::String>::iterator i = vs.find(kk::script::toCStringArgument(ctx, 0, ""));
+            kk::String name;
+            
+            name.append("GL_");
+            name.append(kk::script::toCStringArgument(ctx, 0, ""));
+            
+            std::set<kk::String>::iterator i = vs.find(name);
             
             if(i != vs.end()) {
-                duk_push_object(ctx);
+                duk_push_boolean(ctx, 1);
                 return 1;
             }
             

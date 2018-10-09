@@ -78,14 +78,22 @@ namespace kk {
             if(string != nullptr) {
                 
                 if(CStringHasPrefix(string, "rgba(")) {
+#ifdef KK_CG_FLOAT64
                     sscanf(string, "rgba(%lf,%lf,%lf,%lf)",&v.r,&v.g,&v.b,&v.a);
+#else
+                    sscanf(string, "rgba(%f,%f,%f,%f)",&v.r,&v.g,&v.b,&v.a);
+#endif
                     v.r = v.r / 255.0f;
                     v.g = v.g / 255.0f;
                     v.b = v.b / 255.0f;
                     
                 } else if(CStringHasPrefix(string, "rgb(")) {
-                    
+
+#ifdef KK_CG_FLOAT64
                     sscanf(string, "rgba(%lf,%lf,%lf)",&v.r,&v.g,&v.b);
+#else
+                    sscanf(string, "rgba(%f,%f,%f)",&v.r,&v.g,&v.b);
+#endif
                     v.r = v.r / 255.0f;
                     v.g = v.g / 255.0f;
                     v.b = v.b / 255.0f;
@@ -730,10 +738,6 @@ namespace kk {
             return _width * _height * 4;
         }
 
-        OSImage::OSImage(kk::CString src,kk::CString basePath):_src(src),_basePath(basePath) {
-            
-        }
-        
         kk::CString OSImage::src() {
             return _src.c_str();
         }
