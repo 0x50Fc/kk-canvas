@@ -28,6 +28,7 @@
 		1A4490DC2126E00F00C9A50A /* WebGLContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A4490DB2126E00F00C9A50A /* WebGLContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A4490DD2126E01300C9A50A /* CGContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A4490D52126DC2500C9A50A /* CGContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A4490DF2126E04800C9A50A /* WebGLContext.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1A4490DE2126E04800C9A50A /* WebGLContext.cc */; };
+		1A47EC15216F440400883E8E /* KKCanvas.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A47EC14216F440400883E8E /* KKCanvas.mm */; };
 		1A484D79215CC32900B63916 /* CGContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A484D77215CB30F00B63916 /* CGContext.mm */; };
 		1A484D7C215CD03800B63916 /* KKCanvasElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A484D7A215CD03800B63916 /* KKCanvasElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A484D7D215CD03800B63916 /* KKCanvasElement.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A484D7B215CD03800B63916 /* KKCanvasElement.mm */; };
@@ -161,6 +162,7 @@
 		1A4490D82126DC8C00C9A50A /* CGContext.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CGContext.cc; sourceTree = "<group>"; };
 		1A4490DB2126E00F00C9A50A /* WebGLContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebGLContext.h; sourceTree = "<group>"; };
 		1A4490DE2126E04800C9A50A /* WebGLContext.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WebGLContext.cc; sourceTree = "<group>"; };
+		1A47EC14216F440400883E8E /* KKCanvas.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KKCanvas.mm; sourceTree = "<group>"; };
 		1A484D77215CB30F00B63916 /* CGContext.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CGContext.mm; sourceTree = "<group>"; };
 		1A484D7A215CD03800B63916 /* KKCanvasElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKCanvasElement.h; sourceTree = "<group>"; };
 		1A484D7B215CD03800B63916 /* KKCanvasElement.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KKCanvasElement.mm; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 				1A4490862126DAF800C9A50A /* Info.plist */,
 				1A484D77215CB30F00B63916 /* CGContext.mm */,
 				1A7A4638215F2702000A6145 /* CGImage.mm */,
+				1A47EC14216F440400883E8E /* KKCanvas.mm */,
 				1A484D7A215CD03800B63916 /* KKCanvasElement.h */,
 				1A484D7B215CD03800B63916 /* KKCanvasElement.mm */,
 				1A7A4653215F4E6D000A6145 /* KKCanvasGLContext.h */,
@@ -496,6 +499,7 @@
 				1A484D7D215CD03800B63916 /* KKCanvasElement.mm in Sources */,
 				1A7A4639215F2702000A6145 /* CGImage.mm in Sources */,
 				1A7A4637215E2A0E000A6145 /* WebGLContextJS.cc in Sources */,
+				1A47EC15216F440400883E8E /* KKCanvas.mm in Sources */,
 				1A7A4656215F4E6E000A6145 /* KKCanvasGLContext.m in Sources */,
 				1A7A462E215DC372000A6145 /* kk-canvas.cc in Sources */,
 				1AFC6150215C731700393544 /* CGContextJS.cc in Sources */,

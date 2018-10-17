@@ -65,11 +65,53 @@
     glBindRenderbuffer(GL_RENDERBUFFER, _data.color); KK_GL_ERROR(glBindRenderbuffer)
 }
 
+
+-(void) resize:(CGSize) size {
+    
+    if(CGSizeEqualToSize(_resize, size)) {
+        return;
+    }
+    
+    _resize = size;
+    
+    _width = (GLsizei) ceil(size.width);
+    _height = (GLsizei) ceil(size.height);
+    
+    glBindRenderbuffer(GL_RENDERBUFFER, _data.color); KK_GL_ERROR(glBindRenderbuffer)
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, _width, _height); KK_GL_ERROR(glRenderbufferStorage)
+    
+    glBindRenderbuffer(GL_RENDERBUFFER, _data.depth); KK_GL_ERROR(glBindRenderbuffer)
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, _width, _height); KK_GL_ERROR(glRenderbufferStorage)
+    
+    glBindFramebuffer(GL_FRAMEBUFFER, _data.frame); KK_GL_ERROR(glBindFramebuffer)
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _data.color); KK_GL_ERROR(glFramebufferRenderbuffer)
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _data.depth); KK_GL_ERROR(glFramebufferRenderbuffer)
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _data.depth); KK_GL_ERROR(glFramebufferRenderbuffer)
+    
+    glBindRenderbuffer(GL_RENDERBUFFER, _data.color); KK_GL_ERROR(glBindRenderbuffer)
+    
+    glEnable(GL_DEPTH_TEST); KK_GL_ERROR(glEnable GL_DEPTH_TEST)
+    glEnable(GL_STENCIL_TEST); KK_GL_ERROR(glEnable GL_STENCIL_TEST)
+    glEnable(GL_SCISSOR_TEST); KK_GL_ERROR(glEnable GL_SCISSOR_TEST)
+    glEnable(GL_BLEND); KK_GL_ERROR(glEnable GL_BLEND)
+    glBlendFunc(GL_ONE , GL_ONE_MINUS_SRC_ALPHA); KK_GL_ERROR(glBlendFunc)
+    
+    //    glEnable(GL_POINT_SMOOTH); KK_GL_ERROR(glEnable GL_POINT_SMOOTH)
+    //    glEnable(GL_LINE_SMOOTH); KK_GL_ERROR(glEnable GL_LINE_SMOOTH)
+    //    glHint(GL_POINT_SMOOTH_HINT,GL_NICEST); KK_GL_ERROR(glHint GL_POINT_SMOOTH_HINT)
+    //    glHint(GL_LINE_SMOOTH_HINT,GL_NICEST); KK_GL_ERROR(glHint GL_LINE_SMOOTH_HINT)
+    
+    glViewport(0, 0, _width, _height); KK_GL_ERROR(glViewport)
+    
+}
+
 -(void) resizeLayer:(CAEAGLLayer *) layer {
     
     if(CGSizeEqualToSize(_resize, layer.bounds.size)) {
         return;
     }
+    
+    _resize = layer.bounds.size;
     
     glBindRenderbuffer(GL_RENDERBUFFER, _data.color); KK_GL_ERROR(glBindRenderbuffer)
     

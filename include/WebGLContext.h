@@ -210,8 +210,6 @@ namespace kk {
             
             DEF_SCRIPT_METHOD(readPixels)
             
-            void extracted(duk_context *ctx);
-            
             DEF_SCRIPT_METHOD(renderbufferStorage)
             DEF_SCRIPT_METHOD(sampleCoverage)
             DEF_SCRIPT_METHOD(scissor)

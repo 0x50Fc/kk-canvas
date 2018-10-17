@@ -29,6 +29,26 @@
 
 namespace kk {
     
+    static duk_ret_t CanvasAlloc(duk_context * ctx) {
+        
+        kk::Uint width = kk::script::toUintArgument(ctx, 0, 0);
+        kk::Uint height = kk::script::toUintArgument(ctx, 1, 0);
+        
+        duk_get_global_string(ctx, "canvas");
+        
+        kk::Canvas * v = dynamic_cast<kk::Canvas *>(kk::script::toObjectArgument(ctx, -1));
+        
+        duk_pop(ctx);
+        
+        if(v) {
+            kk::Strong vv = v->createCanvas(width, height);
+            kk::script::PushObject(ctx, vv.get());
+            return 1;
+        }
+        
+        return 0;
+    }
+    
     IMP_SCRIPT_CLASS_BEGIN_NOALLOC(nullptr, Canvas, Canvas)
     
     static kk::script::Property propertys[] = {
@@ -44,6 +64,8 @@ namespace kk {
     
     kk::script::SetMethod(ctx, -1, methods, sizeof(methods) / sizeof(kk::script::Method));
     
+    duk_push_c_function(ctx, CanvasAlloc, 2);
+    duk_put_prop_string(ctx, -2, "alloc");
   
     IMP_SCRIPT_CLASS_END
     
@@ -170,9 +192,9 @@ namespace kk {
                 
                 if(fd) {
                     
-                    void * data = duk_push_fixed_buffer(ctx, st.st_size);
+                    void * data = duk_push_fixed_buffer(ctx, (duk_size_t) st.st_size);
                    
-                    if(fread(data, 1, st.st_size, fd) != st.st_size) {
+                    if(fread(data, 1, (size_t) st.st_size, fd) != st.st_size) {
                         kk::Log("File Read Error %s",p.c_str());
                         fclose(fd);
                         duk_pop(ctx);
@@ -182,10 +204,10 @@ namespace kk {
                     fclose(fd);
                     
                     if(kk::CStringEqual(type, "arraybuffer")) {
-                        duk_push_buffer_object(ctx, -1, 0, st.st_size, DUK_BUFOBJ_ARRAYBUFFER);
+                        duk_push_buffer_object(ctx, -1, 0, (duk_size_t) st.st_size, DUK_BUFOBJ_ARRAYBUFFER);
                         duk_remove(ctx, -2);
                     } else {
-                        duk_push_buffer_object(ctx, -1, 0, st.st_size, DUK_BUFOBJ_UINT8ARRAY);
+                        duk_push_buffer_object(ctx, -1, 0, (duk_size_t) st.st_size, DUK_BUFOBJ_UINT8ARRAY);
                         duk_remove(ctx, -2);
                     }
                     
@@ -337,6 +359,8 @@ namespace kk {
             
         }
         
+        kk::script::Openlib(ctx, "kk-canvas");
+        
     }
     
     
@@ -404,7 +428,7 @@ namespace kk {
     _queue(queue),_basePath(basePath),_userdata(userdata),
     _draw(cb->draw),_getContext(cb->getContext),
     _width(width),_height(height),
-    _displaying(false){
+    _displaying(false),_userdataRelease(cb->userdataRelease){
         
         _jsContext = new kk::script::Context();
         
@@ -447,6 +471,12 @@ namespace kk {
         }
         
         
+    }
+    
+    Canvas::~Canvas() {
+        if(_userdata && _userdataRelease) {
+            (*_userdataRelease)(_userdata);
+        }
     }
     
     kk::script::Context * Canvas::jsContext() {
@@ -583,8 +613,11 @@ namespace kk {
         return _userdata;
     }
     
-    void Canvas::setUserdata(void *userdata) {
-        _userdata = userdata;
+    void Canvas::clearUserdata() {
+        if(_userdata && _userdataRelease) {
+            (*_userdataRelease)(_userdata);
+        }
+        _userdata = nullptr;
     }
     
     static void Canvas_onresize(DispatchQueue * queue,BK_DEF_ARG) {

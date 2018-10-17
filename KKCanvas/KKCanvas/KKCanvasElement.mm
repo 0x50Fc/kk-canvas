@@ -123,7 +123,7 @@ static void KKCanvasElement_Recycle(kk::DispatchQueue * queue,BK_DEF_ARG) {
 
     if(_canvas != nil) {
         
-        _canvas->setUserdata(nil);
+        _canvas->clearUserdata();
         
         BK_CTX
         
@@ -281,6 +281,7 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
         KKCanvasElement_CanvasDrawFunc,
         KKCanvasElement_CanvasEmitFunc,
         KKCanvasElement_CanvasGetContextFunc,
+        nullptr,
     };
     
     CGFloat v = view.window.screen.scale;
@@ -315,7 +316,7 @@ static void KKCanvasElement_CanvasGetContextFunc(kk::Canvas * canvas,kk::Object 
     
     if(_canvas != nil) {
         
-        _canvas->setUserdata(nil);
+        _canvas->clearUserdata();
         
         BK_CTX
         
